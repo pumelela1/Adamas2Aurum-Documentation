@@ -20,15 +20,17 @@ tagline: 'Project Documentation',
   },
 
   // Set the production url of your site here
-  url: 'https://your-docusaurus-site.example.com',
+  url: 'https://pumelela1.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  organizationName: 'pumelela1', // Usually your GitHub org/user name.
+  projectName: 'Adamas2Aurum-Documentation', // Usually your repo name.
+  deploymentBranch: 'gh-pages',
+trailingSlash: false,
 
   onBrokenLinks: 'throw',
 
