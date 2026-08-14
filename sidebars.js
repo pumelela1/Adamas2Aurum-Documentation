@@ -39,10 +39,10 @@ const sidebars = {
         'project-management/burndown',
 
         {
-          type: 'category',
-          label: 'Sprints',
-          items: [],
-        },
+  type: 'category',
+  label: 'Sprints',
+  items: ['sprints/overview'],
+},
 
         {
           type: 'category',
