@@ -28,3 +28,235 @@
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+
+/* =========================================================
+   ADAMAS2AURUM — WITS-THEMED DOCUMENTATION
+   ========================================================= */
+
+:root {
+  --ifm-color-primary: #003d7c;
+  --ifm-color-primary-dark: #00366f;
+  --ifm-color-primary-darker: #003268;
+  --ifm-color-primary-darkest: #002954;
+  --ifm-color-primary-light: #064b91;
+  --ifm-color-primary-lighter: #0a529c;
+  --ifm-color-primary-lightest: #1763ad;
+
+  --ifm-link-color: #003d7c;
+  --ifm-link-hover-color: #c9a227;
+
+  --adamas-navy: #003d7c;
+  --adamas-dark-navy: #00264d;
+  --adamas-gold: #c9a227;
+  --adamas-light-gold: #e5c65c;
+
+  --ifm-code-font-size: 95%;
+}
+
+/* ---------------------------------------------------------
+   Links
+   --------------------------------------------------------- */
+
+a {
+  color: var(--adamas-navy);
+}
+
+a:hover {
+  color: var(--adamas-gold);
+  text-decoration: none;
+}
+
+/* ---------------------------------------------------------
+   Navbar
+   --------------------------------------------------------- */
+
+.navbar {
+  background: var(--adamas-navy);
+}
+
+.navbar__title,
+.navbar__link {
+  color: white;
+}
+
+.navbar__link:hover {
+  color: var(--adamas-light-gold);
+}
+
+.navbar__link--active {
+  color: var(--adamas-light-gold);
+}
+
+/* ---------------------------------------------------------
+   Documentation sidebar
+   --------------------------------------------------------- */
+
+.menu__link {
+  color: #333;
+}
+
+.menu__link:hover {
+  color: var(--adamas-navy);
+  background: rgba(0, 61, 124, 0.08);
+}
+
+.menu__link--active {
+  color: var(--adamas-navy);
+  background: rgba(0, 61, 124, 0.12);
+  font-weight: 700;
+}
+
+/* Sidebar category labels */
+
+.menu__list-item-collapsible:hover {
+  background: rgba(0, 61, 124, 0.08);
+}
+
+/* ---------------------------------------------------------
+   Documentation headings
+   --------------------------------------------------------- */
+
+.markdown h1 {
+  color: var(--adamas-navy);
+}
+
+.markdown h2 {
+  color: var(--adamas-navy);
+  border-bottom: 2px solid var(--adamas-gold);
+  padding-bottom: 0.3rem;
+}
+
+.markdown h3 {
+  color: var(--adamas-navy);
+}
+
+/* ---------------------------------------------------------
+   Buttons
+   --------------------------------------------------------- */
+
+.button--primary {
+  background: var(--adamas-navy);
+  border-color: var(--adamas-navy);
+  color: white;
+}
+
+.button--primary:hover {
+  background: var(--adamas-dark-navy);
+  border-color: var(--adamas-gold);
+  color: white;
+}
+
+/* ---------------------------------------------------------
+   Tables
+   --------------------------------------------------------- */
+
+table {
+  display: table;
+  width: 100%;
+}
+
+table thead tr {
+  background: var(--adamas-navy);
+}
+
+table thead th {
+  color: white;
+}
+
+table tbody tr:nth-child(even) {
+  background: rgba(0, 61, 124, 0.04);
+}
+
+table tbody tr:hover {
+  background: rgba(201, 162, 39, 0.10);
+}
+
+/* ---------------------------------------------------------
+   Code blocks
+   --------------------------------------------------------- */
+
+.theme-code-block {
+  border-top: 3px solid var(--adamas-gold);
+}
+
+/* ---------------------------------------------------------
+   Admonitions / information boxes
+   --------------------------------------------------------- */
+
+.alert--info {
+  --ifm-alert-background-color: rgba(0, 61, 124, 0.08);
+  --ifm-alert-border-color: var(--adamas-navy);
+}
+
+.alert--warning {
+  --ifm-alert-background-color: rgba(201, 162, 39, 0.12);
+  --ifm-alert-border-color: var(--adamas-gold);
+}
+
+/* ---------------------------------------------------------
+   Pagination
+   --------------------------------------------------------- */
+
+.pagination-nav__link:hover {
+  border-color: var(--adamas-gold);
+}
+
+/* ---------------------------------------------------------
+   Footer
+   --------------------------------------------------------- */
+
+.footer {
+  background: var(--adamas-dark-navy);
+}
+
+.footer__title {
+  color: var(--adamas-light-gold);
+}
+
+.footer__link-item:hover {
+  color: var(--adamas-light-gold);
+}
+
+/* ---------------------------------------------------------
+   Dark mode
+   --------------------------------------------------------- */
+
+[data-theme='dark'] {
+  --ifm-color-primary: #5b9bd5;
+  --ifm-color-primary-dark: #438dce;
+  --ifm-color-primary-darker: #3786ca;
+  --ifm-color-primary-darkest: #296fa9;
+  --ifm-color-primary-light: #73a9dc;
+  --ifm-color-primary-lighter: #7eafe0;
+  --ifm-color-primary-lightest: #a3c6ea;
+
+  --ifm-link-color: #73a9dc;
+  --ifm-link-hover-color: var(--adamas-light-gold);
+
+  --ifm-background-color: #0b1f33;
+  --ifm-background-surface-color: #102a43;
+}
+
+/* Dark mode sidebar */
+
+[data-theme='dark'] .menu__link {
+  color: #e6edf3;
+}
+
+[data-theme='dark'] .menu__link:hover {
+  color: var(--adamas-light-gold);
+  background: rgba(91, 155, 213, 0.12);
+}
+
+[data-theme='dark'] .menu__link--active {
+  color: var(--adamas-light-gold);
+  background: rgba(201, 162, 39, 0.12);
+}
+
+/* Dark mode headings */
+
+[data-theme='dark'] .markdown h1,
+[data-theme='dark'] .markdown h2,
+[data-theme='dark'] .markdown h3 {
+  color: #ffffff;
+}
