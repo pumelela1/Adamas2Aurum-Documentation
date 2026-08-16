@@ -25,6 +25,10 @@ const config = {
 
   // Fail the build if we accidentally create broken links.
   onBrokenLinks: 'throw',
+  markdown: {
+  mermaid: true,
+},
+  themes: ['@docusaurus/theme-mermaid'],
 
   i18n: {
     defaultLocale: 'en',
