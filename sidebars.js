@@ -26,14 +26,8 @@ const sidebars = {
         'project-management/project-plan',
         'project-management/product-backlog',
         'project-management/burndown',
-
-        {
-          type: 'category',
-          label: 'Sprints',
-          items: ['sprints/overview'],
-        },
-
-        'project-management/meetings/overview',
+        'project-management/meetings',
+        
       ],
     },
 
