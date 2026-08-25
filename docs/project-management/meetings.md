@@ -13,7 +13,7 @@ The project follows a **Kanban-based workflow**, allowing tasks to be organised,
 | Meeting Number | Date                     | Discussion & Outcomes | Meeting Minutes | Meeting Evidence |
 | -------------- | ------------------------ | --------------------- | --------------- | ---------------- |
 | Meeting 1      | Tuesday, 04 August 2026  |                       | [View](https://drive.google.com/file/d/1bUtm_7q0ddBjK9gHUHTAdcd3CrfbJqMy/view?usp=sharing)       | In-person client meeting   |
-| Meeting 2      | Thursday, 06 August 2026 |                       | [View](https://drive.google.com/file/d/10Syekf2-MEAqlozoSo6J51ebeR7nLgaF/view?usp=sharing)       | [View](#)        |
+| Meeting 2      | Thursday, 06 August 2026 |                       | [View](https://drive.google.com/file/d/10Syekf2-MEAqlozoSo6J51ebeR7nLgaF/view?usp=sharing)       | [View](https://drive.google.com/drive/u/2/folders/1I9P2bmk_UHojsqdqHLLQdo8Wg7P1zX7i)        |
 | Meeting 3      | Sunday, 09 August 2026   |                       | [View](https://drive.google.com/drive/u/2/folders/1541Q1JauKF67KnJXX6yazXAt58ZO2SvX)       | [View](https://drive.google.com/drive/u/2/folders/1I9P2bmk_UHojsqdqHLLQdo8Wg7P1zX7i)        |
 
 ---
