@@ -71,12 +71,16 @@ const sidebars = {
       ],
     },
 
-
     {
       type: 'category',
       label: 'Implementation',
       items: [
+        'implementation/overview',
+        'implementation/frontend',
+        'implementation/backend',
         'implementation/authentication',
+        'implementation/database',
+        'implementation/game-systems',
       ],
     },
 
