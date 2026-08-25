@@ -23,11 +23,34 @@ const sidebars = {
       label: 'Project Management',
       items: [
         'project-management/overview',
-        'project-management/project-plan',
-        'project-management/product-backlog',
-        'project-management/burndown',
         'project-management/meetings',
-        
+        'project-management/user-stories',
+        'project-management/product-backlog',
+      ],
+    },
+
+
+
+    {
+      type: 'category',
+      label: 'Sprints',
+      items: [
+        'sprints/sprints',
+        {
+          type: 'category',
+          label: 'Minutes',
+          items: [
+            'sprints/sprint-1-meeting-1',
+            'sprints/sprint-1-meeting-2',
+            'sprints/sprint-1-meeting-3',
+            'sprints/sprint-1-meeting-4',
+            'sprints/sprint-1-meeting-5',
+            'sprints/sprint-1-meeting-6',
+            'sprints/sprint-1-meeting-7',
+            'sprints/sprint-1-meeting-8',
+            'sprints/sprint-1-meeting-9',
+          ],
+	},
       ],
     },
 
@@ -35,16 +58,12 @@ const sidebars = {
       type: 'category',
       label: 'Requirements & Design',
       items: [
-        'design/requirements',
-        'design/user-stories',
         'design/design-documents',
-
         {
           type: 'category',
           label: 'Architecture',
           items: [
             'design/architecture/system-architecture',
-            'design/architecture/component-diagram',
             'design/architecture/deployment-diagram',
             'design/architecture/database-design',
           ],
@@ -52,16 +71,12 @@ const sidebars = {
       ],
     },
 
+
     {
       type: 'category',
       label: 'Implementation',
       items: [
-        'implementation/overview',
-        'implementation/frontend',
-        'implementation/backend',
         'implementation/authentication',
-        'implementation/database',
-        'implementation/game-systems',
       ],
     },
 
