@@ -142,7 +142,3 @@ The following are not currently covered and are planned for Sprint 3:
     run. This is a Milestone 2 gap that will be addressed before the
     Sprint 3 submission.
 
-    Changelog
-Date	Change
-2026-09-11	Test workflow added (PR #55). Coverage report added to package.json as test:coverage. Fix to card_award.test.js for the missing export (PR #56). New speed-bracket test added.
-(earlier)	leaderboard.test.js (9 tests), card_award.test.js (9 tests), geolocation.test.js (1 test).
