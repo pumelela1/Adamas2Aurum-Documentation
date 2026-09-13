@@ -682,6 +682,279 @@ Top-level convenience endpoint that mirrors `GET /api/auth/me`. Returns the curr
 
 ---
 
+## Battles (WebSocket)
+
+**Mount:** `/ws/battle`
+
+**Routers:** `socket_router.js`, `battle_socket.js`
+
+Adamas2Aurum handles live multiplayer and NPC card battles over a persistent WebSocket connection.
+
+### Connection & Authentication
+
+* **Auth required:** Yes. Authentication relies on the same session cookie as the HTTP API. The connection will be rejected with an HTTP `401 Unauthorized` during the upgrade phase if the session is invalid or missing.
+
+
+* **Message Format:** All incoming and outgoing messages must be stringified JSON.
+
+
+* **Reconnection Window:** If a player disconnects during an active battle, they are placed in a timeout state. They have exactly 2 minutes (120,000 ms) to reconnect; otherwise, the match is marked as `ABANDONED`.
+
+
+
+### Client-to-Server Messages
+
+Clients interact with the battle server by sending JSON objects containing a `type` property.
+
+#### `join_lobby`
+
+Places the player in the matchmaking lobby, or gracefully reconnects them to an active/pending battle if one exists.
+
+* **Request:** `{ "type": "join_lobby" }`
+
+
+#### `challenge_player`
+
+Issues a pending PvP battle challenge to an available player in the lobby.
+
+* **Request:** `{ "type": "challenge_player", "target_user_id": 12 }`
+
+
+#### `accept_challenge`
+
+Accepts or declines an incoming PvP match request.
+
+* **Request:**
+
+```json
+{
+  "type": "accept_challenge",
+  "accept": true,
+  "challenger_id": 12
+}
+
+```
+
+#### `start_npc_battle`
+
+Bypasses the lobby and immediately provisions a battle against the CPU using a randomly generated deck.
+
+* **Request:** `{ "type": "start_npc_battle" }`
+
+
+#### `submit_deck`
+
+Commits the player's 5-card deck for an initialized battle.
+
+* **Request:**
+
+```json
+{
+  "type": "submit_deck",
+  "deck": [
+    { "card_id": 1 }, { "card_id": 2 }, { "card_id": 3 }, { "card_id": 4 }, { "card_id": 5 }
+  ]
+}
+
+```
+
+(Note: Decks must contain exactly 5 valid cards)
+
+#### `attack`
+
+Executes a combat turn. The turn is validated against the active player's state and card categories.
+
+* **Request:**
+
+```json
+{
+  "type": "attack",
+  "attacker_slot": 0,
+  "target_slot": 2,
+  "action": "ATTACK"
+}
+
+```
+
+(Valid actions include `ATTACK`, `DEFEND`, `DODGE`, `BUFF`, `DEBUFF`, and `REVIVE`, depending on the card's category)
+
+#### `forfeit`
+
+Forfeits an active battle, immediately awarding the win to the opponent.
+
+* **Request:** `{ "type": "forfeit" }`
+
+
+#### `ping`
+
+Keep-alive mechanism.
+
+* **Request:** `{ "type": "ping" }`
+
+
+### Server-to-Client Events
+
+The server pushes JSON payloads back to connected clients to update their state and respond to actions.
+
+#### `lobby_users`
+
+Broadcasts the list of currently online users resting in the lobby.
+
+**Response:**
+```json
+{
+  "type": "lobby_users",
+  "users": [
+    {
+      "user_id": 12,
+      "username": "Test Player",
+      "name": "Test Player"
+    }
+  ]
+}
+
+```
+
+#### `incoming_challenge`
+
+Notifies a user that they have been challenged to a PvP match.
+
+**Response:**
+```json
+{
+  "type": "incoming_challenge",
+  "from_user_id": 5,
+  "from_username": "ChallengerName"
+}
+
+```
+
+#### `reject_challenge`
+
+Notifies the challenger that their match request was declined or the opponent was busy.
+
+**Response:**
+```json
+{
+  "type": "reject_challenge",
+  "challenger_id": 5
+}
+
+```
+
+#### `battle_started`
+
+Indicates a match has been created and prompts clients to submit their decks. Includes `is_npc: true` if playing against the CPU, or the respective player IDs for PvP.
+
+**Response (PvP):**
+```json
+{
+  "type": "battle_started",
+  "battle_id": 42,
+  "player1_id": 5,
+  "player2_id": 12
+}
+
+```
+
+#### `deck_accepted`
+
+Confirms a successful deck submission while waiting for the opponent.
+
+**Response:**
+```json
+{
+  "type": "deck_accepted",
+  "battle_id": 42,
+  "message": "Deck saved. Waiting for opponent..."
+}
+
+```
+
+#### `state_update`
+
+Delivers the complete, synchronized state of the board. Sent upon reconnection or after both decks are submitted.
+
+**Response:**
+```json
+{
+  "type": "state_update",
+  "battle_id": 42,
+  "state": { 
+    /* large object that has information on the current state of the game */
+  }
+}
+
+```
+
+#### `turn_result`
+
+Delivers the combat log and math results of an executed turn. If the opponent is an NPC, their turn is calculated and included in `opponent_result` within the same payload.
+
+**Response:**
+```json
+{
+  "type": "turn_result",
+  "battle_id": 42,
+  "player_user_id": 5,
+  "winner": -1,
+  "state": { /* Updated board state */ },
+  "player_result": {
+    "action": "ATTACK",
+    "attacker_slot": 0,
+    "target_slot": 2,
+    "landed": true,
+    "damage": 25,
+    "target_health_after": 75
+  },
+  "opponent_result": null 
+}
+
+```
+
+*(Note: `winner` returns `-1` if the match is ongoing, or the `user_id` of the victor if the match has concluded).*
+
+#### `match_results`
+
+Signals the end of the battle (due to knockout, forfeit, or abandonment).
+
+**Response:**
+```json
+{
+  "type": "match_results",
+  "winner": 5
+}
+
+```
+
+*(Note: `winner` is `null` if the match was abandoned by both players).*
+
+#### `error`
+
+Sent if a request fails validation. Often includes a `reject_type` indicating which action failed.
+
+**Response:**
+```json
+{
+  "type": "error",
+  "reject_type": "attack",
+  "message": "Not your turn"
+}
+
+```
+
+#### `pong`
+
+Standard response to a client `ping`.
+
+**Response:**
+```json
+{ "type": "pong" }
+
+```
+
+---
+
 ## External Integrations
 
 * **OpenStreetMap Tile Server:** Client-side map tiles used by Leaflet. Loaded directly from `tile.openstreetmap.org` in the frontend; this is not proxied through the backend.
