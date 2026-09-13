@@ -101,49 +101,49 @@ themselves.
 ## Complete Dependency Reference
 
 Every runtime and development dependency across both `package.json` files,
-with its role and where it is used. Version numbers are the minimum required
+with its role. Version numbers are the minimum required
 range declared in each `package.json`.
 
 ### Backend runtime dependencies (`app/src/backend/package.json`)
 
-| Package | Version | Purpose | Used in |
-| --- | --- | --- | --- |
-| [`express`](https://expressjs.com/) | ^5.2.1 | HTTP server framework — routing, middleware, JSON body parsing | `server.js`, every file in `routes/` |
-| [`better-auth`](https://www.better-auth.com/) | ^1.7.1 | Authentication library — email/password + Google OAuth. Used instead of hand-rolling auth, per the course brief's requirement to rely on established libraries | `src/auth.js`, `server.js` (session bridge) |
-| [`express-session`](https://github.com/expressjs/session) | ^1.19.0 | Session middleware — cookie-based sessions for PIN login, bridged from Better Auth for Google users | `server.js` |
-| [`express-mysql-session`](https://github.com/chill117/express-mysql-session) | ^3.0.3 | MySQL-backed session store for `express-session`, so sessions survive server restarts | `server.js` |
-| [`mysql2`](https://github.com/sidorares/node-mysql2) | ^3.23.3 | MySQL driver with Promise API — all DB queries use `mysql2/promise` | `utils/db.js`, every route/service that touches the DB |
-| [`cors`](https://github.com/expressjs/cors) | ^2.8.6 | Cross-Origin Resource Sharing middleware — allows the frontend origin (port 8055 during dev) to call the API on port 3000 with credentials | `server.js` |
-| [`dotenv`](https://github.com/motdotla/dotenv) | ^17.4.2 | Loads environment variables from `.env` into `process.env` — DB credentials, session secrets, OAuth keys | `utils/db.js`, `server.js` |
-| [`ws`](https://github.com/websockets/ws) | ^8.21.3 | WebSocket server — real-time battle match state sync between players | `websocket/socket_router.js`, `websocket/battle_socket.js` |
+| Package | Version | Purpose |
+| --- | --- | --- |
+| [`express`](https://expressjs.com/) | ^5.2.1 | HTTP server framework - routing, middleware, JSON body parsing |
+| [`better-auth`](https://www.better-auth.com/) | ^1.7.1 | Authentication library - email/password + Google OAuth. Used instead of hand-rolling auth, per the course brief's requirement to rely on established libraries |
+| [`express-session`](https://github.com/expressjs/session) | ^1.19.0 | Session middleware - cookie-based sessions for PIN login, bridged from Better Auth for Google users |
+| [`express-mysql-session`](https://github.com/chill117/express-mysql-session) | ^3.0.3 | MySQL-backed session store for `express-session`, so sessions survive server restarts |
+| [`mysql2`](https://github.com/sidorares/node-mysql2) | ^3.23.3 | MySQL driver with Promise API - all DB queries use `mysql2/promise` |
+| [`cors`](https://github.com/expressjs/cors) | ^2.8.6 | Cross-Origin Resource Sharing middleware - allows the frontend origin (port 8055 during dev) to call the API on port 3000 with credentials |
+| [`dotenv`](https://github.com/motdotla/dotenv) | ^17.4.2 | Loads environment variables from `.env` into `process.env` - DB credentials, session secrets, OAuth keys |
+| [`ws`](https://github.com/websockets/ws) | ^8.21.3 | WebSocket server - real-time battle match state sync between players |
 
 ### Backend dev dependency
 
 | Package | Version | Purpose |
 | --- | --- | --- |
-| [`esbuild`](https://esbuild.github.io/) | ^0.28.2 | Fast bundler — used in `build.js` to produce a bundled `auth-client.bundle.mjs` for the frontend's Better Auth client |
+| [`esbuild`](https://esbuild.github.io/) | ^0.28.2 | Fast bundler - used in `build.js` to produce a bundled `auth-client.bundle.mjs` for the frontend's Better Auth client |
 
 ### Root dependencies
 
-| Package | Version | Purpose | Used in |
-| --- | --- | --- | --- |
-| [`serve`](https://github.com/vercel/serve) | ^14.2.6 | Static file server for the frontend during development (`npm run dev:frontend`) | `package.json` scripts |
+| Package | Version | Purpose |
+| --- | --- | --- |
+| [`serve`](https://github.com/vercel/serve) | ^14.2.6 | Static file server for the frontend during development (`npm run dev:frontend`) |
 
 ### Root dev dependencies
 
 | Package | Version | Purpose |
 | --- | --- | --- |
-| [`jest`](https://jestjs.io/) | ^29.7.0 | Test runner — configured with two projects (frontend / backend) via `package.json` `jest.projects` |
+| [`jest`](https://jestjs.io/) | ^29.7.0 | Test runner - configured with two projects (frontend / backend) via `package.json` `jest.projects` |
 | [`jest-environment-jsdom`](https://github.com/jsdom/jsdom) | ^29.7.0 | jsdom test environment for frontend tests (mocks `document`, `window`, `navigator`) |
-| [`prettier`](https://prettier.io/) | ^3.9.6 | Code formatter — enforced in CI via `format:check` |
-| [`vite`](https://vitejs.dev/) | ^8.2.2 | Frontend dev server with HMR — optional; the backend can serve the frontend directly on port 3000 |
+| [`prettier`](https://prettier.io/) | ^3.9.6 | Code formatter - enforced in CI via `format:check` |
+| [`vite`](https://vitejs.dev/) | ^8.2.2 | Frontend dev server with HMR - optional; the backend can serve the frontend directly on port 3000 |
 
 ### External services (not npm packages, but third-party code the project depends on)
 
-| Service / library | Purpose |
-| --- | --- |
-| [OpenStreetMap](https://www.openstreetmap.org/) tile server | Base map tiles for the campus map. Loaded client-side from `tile.openstreetmap.org` |
-| [Leaflet.js](https://leafletjs.com/) | Client-side map rendering — loaded via CDN in `index.html` and `pages/leaderboard.html` |
-| [Aiven](https://aiven.io/) | Managed MySQL hosting for the shared development database (alternative to local Docker) |
-| [GitHub Pages](https://pages.github.com/) | Hosting for this documentation site |
-| [Cloudflare Pages](https://pages.cloudflare.com/) | Hosting for the deployed frontend (see `.gitea/workflows/frontend-deploy.yml`) |
+| Service / library                                           | Purpose                                                                                 |
+| ---                                                         | ---                                                                                     |
+| [OpenStreetMap](https://www.openstreetmap.org/) tile server | Base map tiles for the campus map. Loaded client-side from `tile.openstreetmap.org`     |
+| [Leaflet.js](https://leafletjs.com/)                        | Client-side map rendering - loaded via CDN                                              |
+| [Aiven](https://aiven.io/)                                  | Managed MySQL hosting for the shared development database (alternative to local Docker) |
+| [GitHub Pages](https://pages.github.com/)                   | Hosting for this documentation site                                                     |
+| [Cloudflare Pages](https://pages.cloudflare.com/)           | Hosting for the deployed frontend (see `.gitea/workflows/frontend-deploy.yml`)          |

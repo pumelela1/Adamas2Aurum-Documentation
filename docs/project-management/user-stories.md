@@ -1,10 +1,11 @@
-# User Stories for Sprint 1
-
-This document details the Sprint 1 requirements for **Adamas2Aurum** (404-Found-Us).
+# User Stories
+This document details the Sprint requirements for **Adamas2Aurum** (404-Found-Us).
 
 ---
 
-## Sprint 1 User Stories & Team Assignments
+## User Stories for Sprint 1
+
+### Sprint 1 User Stories & Team Assignments
 
 | Story ID | User Story Description | Assigned Member |
 | :--- | :--- | :--- |
@@ -19,35 +20,31 @@ This document details the Sprint 1 requirements for **Adamas2Aurum** (404-Found-
 | **US-09** | **Card Definitions & Collection:** As a content author, I can define cards with a category and attributes in the console; as a player, I can browse collected cards. | **Sibusiso** |
 | **US-10** | **Turn-Based CPU Card Battle:** As a player, I can choose a deck from my collection and play a turn-based match against the CPU evaluating attribute values. | **Samukelo** |
 
+---
 
-# User Stories for Sprint 2
+## User Stories for Sprint 2
 
-This document details the Sprint 2 requirements for **Adamas2Aurum** (404-Found-Us).
+### Sprint 2 User Stories & Team Assignments
+
+| Story ID   | User Story Description                                                                                                                                                                                                                                         | Assigned Member                                       |
+| :---       | :---                                                                                                                                                                                                                                                           | :---                                                  |
+| **US2-01** | **Offline attempt capture (client-side):** As a player without signal, I can open an event I've reached, answer its challenge, and have my attempt stored on my device, so a dead zone on campus doesn't stop me from playing.                                 | **Busisiwe**                                          |
+| **US2-02** | **Offline sync & deferred verification (backend):** As the game, when a device reconnects, I check each queued attempt as though it happened at its captured timestamp — against the event's active window and radius at that time — not against "now".        | **Banele**                                            |
+| **US2-03** | **Movement-based trust check:** As the game, I analyze a player's sequence of past verified location checks to flag journeys that couldn't have been walked, so a spoofed single GPS ping isn't enough to cheat.                                               | **Pumelela**                                          |
+| **US2-04** | **Low-accuracy fallback verification:** As the game, when a device reports GPS accuracy too poor to trust, I fall back to a secondary signal (QR scan) to confirm presence instead.                                                                            | **Sibusiso**                                          |
+| **US2-05** | **Asynchronous PvP:** As a player, I can challenge another player to a match, each of us takes our turn whenever it suits us, and if one of us goes quiet for too long the match is forfeited automatically.                                                   | **Samukelo** (Sibusiso and Samukelo discussed a swap) |
+| **US2-06** | **Player profile, points, achievements, streaks:** As a player, I have a profile showing my points, unlocked achievements, and my current daily streak, so there's a reason to keep coming back beyond just collecting cards.                                  | **Busisiwe**                                          |
+| **US2-07** | **Leaderboard:** As a player, I can see how I rank against everyone else by points, so there's competitive pull to keep playing.                                                                                                                               | **Banele**                                            |
+| **US2-08** | **Card rarity, duplicate value, and deck constraints:** As a player, rarer cards are harder to obtain, duplicates I collect can be fused/sold for value instead of sitting dead, and my deck must follow build constraints rather than being freely assembled. | **Pumelela**                                          |
+| **US2-09** | **Trails:** As a player, I can follow a trail — a set of events I must complete in order — and see what's nearby and still unvisited, so exploration feels guided rather than random.                                                                          | **Samukelo**                                          |
+| **US2-10** | **Content curation pipeline:** As a content author, I draft an event/question/card and it only goes live after review and publish — and I can schedule it for a campaign window, retire it afterward, and see which questions players get wrong most often.    | **Sibusiso**                                          |
+
 
 ---
 
-## Sprint 2 User Stories & Team Assignments
+## User Stories for Sprint 3
 
-| Story ID | User Story Description | Assigned Member |
-| :--- | :--- | :--- |
-| **US2-01** | **Offline attempt capture (client-side):** As a player without signal, I can open an event I've reached, answer its challenge, and have my attempt stored on my device, so a dead zone on campus doesn't stop me from playing. | **Busisiwe** |
-| **US2-02** | **Offline sync & deferred verification (backend):** As the game, when a device reconnects, I check each queued attempt as though it happened at its captured timestamp — against the event's active window and radius at that time — not against "now". | **Banele** |
-| **US2-03** | **Movement-based trust check (anti-cheat v1):** As the game, I analyze a player's sequence of past verified location checks to flag journeys that couldn't have been walked, so a spoofed single GPS ping isn't enough to cheat. | **Pumelela** |
-| **US2-04** | **Low-accuracy fallback verification:** As the game, when a device reports GPS accuracy too poor to trust, I fall back to a secondary signal (QR scan) to confirm presence instead. | **Samukelo** |
-| **US2-05** | **Asynchronous PvP:** As a player, I can challenge another player to a match, each of us takes our turn whenever it suits us, and if one of us goes quiet for too long the match is forfeited automatically. | **Sibusiso** |
-| **US2-06** | **Player profile, points, achievements, streaks:** As a player, I have a profile showing my points, unlocked achievements, and my current daily streak, so there's a reason to keep coming back beyond just collecting cards. | **Busisiwe** |
-| **US2-07** | **Leaderboard:** As a player, I can see how I rank against everyone else by points, so there's competitive pull to keep playing. | **Banele** |
-| **US2-08** | **Card rarity, duplicate value, and deck constraints:** As a player, rarer cards are harder to obtain, duplicates I collect can be fused/sold for value instead of sitting dead, and my deck must follow build constraints rather than being freely assembled. | **Pumelela** |
-| **US2-09** | **Trails:** As a player, I can follow a trail — a set of events I must complete in order — and see what's nearby and still unvisited, so exploration feels guided rather than random. | **Samukelo** |
-| **US2-10** | **Content curation pipeline:** As a content author, I draft an event/question/card and it only goes live after review and publish — and I can schedule it for a campaign window, retire it afterward, and see which questions players get wrong most often. | **Sibusiso** |
-
-# User Stories for Sprint 3
-
-This document details the Sprint 3 requirements for **Adamas2Aurum** (404-Found-Us).
-
----
-
-## Sprint 3 User Stories & Team Assignments
+### Sprint 3 User Stories & Team Assignments
 
 | Story ID | User Story Description | Assigned Member |
 | :--- | :--- | :--- |

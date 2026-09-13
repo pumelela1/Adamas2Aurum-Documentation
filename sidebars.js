@@ -29,8 +29,6 @@ const sidebars = {
       ],
     },
 
-
-
     {
       type: 'category',
       label: 'Sprints',
@@ -49,6 +47,7 @@ const sidebars = {
             'sprints/sprint-1-meeting-7',
             'sprints/sprint-1-meeting-8',
             'sprints/sprint-1-meeting-9',
+            'sprints/sprint-2-meeting-16',
           ],
 	},
       ],
@@ -59,6 +58,7 @@ const sidebars = {
       label: 'Requirements & Design',
       items: [
         'design/design-documents',
+        'design/requirements',
         {
           type: 'category',
           label: 'Architecture',
@@ -78,6 +78,7 @@ const sidebars = {
         'implementation/overview',
         'implementation/frontend',
         'implementation/backend',
+        'implementation/api-reference',
         'implementation/authentication',
         'implementation/database',
         'implementation/game-systems',
@@ -90,7 +91,6 @@ const sidebars = {
       items: [
         'testing/test-plan',
         'testing/test-cases',
-        'testing/test-results',
       ],
     },
 
@@ -100,6 +100,7 @@ const sidebars = {
       items: [
         'deployment/overview',
         'deployment/deployment',
+        'deployment/configuration',
         'deployment/troubleshooting',
       ],
     },

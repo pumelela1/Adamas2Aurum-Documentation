@@ -18,6 +18,10 @@
   * [Meeting 11 (29 August 2026)](./sprint-1-meeting-11.md)
   * [Meeting 12 (30 August 2026)](./sprint-1-meeting-12.md)
 
+* [Sprint 1](#sprint-1)
+
+  * [Meeting 16 (6 September 2026)](./sprint-2-meeting-16.md)
+
 > Note: Sprints are usually written physically by whoever the note-taker is for the week. AI is then used to make the minutes taken in a rush more coherent and structured.
 
 ---
@@ -36,3 +40,9 @@
 * **Sprint 1 - Meeting 10 (25 August 2026)**: [View Minutes](./sprint-1-meeting-10.md)
 * **Sprint 1 - Meeting 11 (29 August 2026)**: [View Minutes](./sprint-1-meeting-11.md)
 * **Sprint 1 - Meeting 12 (30 August 2026)**: [View Minutes](./sprint-1-meeting-12.md)
+
+---
+
+## Sprint 2
+
+* **Sprint 2 - Meeting 16 (8 September 2026)**: [View Minutes](./sprint-2-meeting-16.md)

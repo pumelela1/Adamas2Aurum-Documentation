@@ -75,7 +75,7 @@ $ npm run db:reset   # (re)creates the schema from scratch
 $ npm run db:seed    # populates sample users, events, trivia questions, etc.
 ```
 
-`db:reset` is optional if you just want an empty-but-correct schema — the
+`db:reset` is optional if you just want an empty-but-correct schema - the
 backend also creates tables on every startup via `CREATE TABLE IF NOT
 EXISTS`, which is safe and non-destructive. `db:reset` is for when you
 want a genuinely clean slate.
@@ -139,7 +139,7 @@ $ npm run start:frontend
 ```
 
 > **Note:** the backend serves the frontend's static files and pages
-> directly on the same port as the API (`PORT`, default `3000`) — see the
+> directly on the same port as the API (`PORT`, default `3000`) - see the
 > static-serving section of `server.js`. In normal local use, you only
 > need the backend running; visiting `http://localhost:3000` gets you
 > the full app (API, session cookies, and frontend, all same-origin,
@@ -185,4 +185,32 @@ $ npm run start:frontend
 ---
 
 ## Remote Deployment
+
+### Frontend (Cloudfare Pages)
+
+The deployment of the frontend is done automatically using gitea actions, so no action
+is required in the part of the developer (except making sure that they do not push
+broken/untested code to the `main` branch which is the branch designated for remote
+deployment).
+
+The deployment action can be found at `.gitea/workflows/frontend-deploy.yml`.
+It requires repository secrets to be configured for both the Cloudfare API token and the account ID.
+The workflow accesses these as `secrets.CLOUDFLARE_API_TOKEN` and `secrets.CLOUDFLARE_ACCOUNT_ID`. 
+Currently these must be set within the Gitea repository's secrets settings.
+
+### Backend
+
+...
+
+### Database
+
+The developer has nothing to do in this case, except make sure that if some table was
+altered or modified in the `app/src/backend/db/schema.sql` in one of the
+`CREATE TABLE IF NOT EXISTS` statements, they have the responsibility of running
+`npm run db:reset` to ensure that the table is updated in Aiven (**Note**: This is destructive
+as it deletes tables).
+
+Database migration will have to be a worked upon aspect in the future.
+One of the solutions is using some type of versioning system and using `ALTER TABLE`
+when modifying a table.
 

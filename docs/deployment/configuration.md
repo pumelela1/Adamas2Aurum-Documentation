@@ -34,7 +34,7 @@ $ cp app/src/backend/.env.example app/src/backend/.env
 | `SESSION_SECRET` | string               | `a2a-dev-secret`           | `server.js`                |
 
 All boolean-style variables are compared against the literal string
-`'true'` — anything else (including unset, `"1"`, or `"True"`) is treated
+`'true'` - anything else (including unset, `"1"`, or `"True"`) is treated
 as false.
 
 ---
@@ -54,11 +54,11 @@ Pool sizing (`waitForConnections: true`, `connectionLimit: 10`,
 
 ## Server & sessions
 
-- **`PORT`** — defaults to `3000`. The backend also serves the frontend's
+- **`PORT`** - defaults to `3000`. The backend also serves the frontend's
   static files and HTML pages directly from this same port (see
   `frontendDir` / `pagesDir` in `server.js`), so in normal local use this is
   the only port you need to visit.
-- **`SESSION_SECRET`** — signs the `express-session` cookie. Defaults to the
+- **`SESSION_SECRET`** - signs the `express-session` cookie. Defaults to the
   literal string `a2a-dev-secret` if unset. Fine for local dev; this should
   always be overridden with a long random value anywhere the app is
   reachable outside your own machine.
@@ -77,7 +77,7 @@ cookie: {
 
 `server.js` also wires in [Better Auth](https://www.better-auth.com/) via
 `./src/auth.js` for email/password sign-up and sign-in, alongside the
-legacy PIN-based auth routes (kept for backward compatibility — see the
+legacy PIN-based auth routes (kept for backward compatibility - see the
 `PIN_AUTH_PATHS` gate in `server.js`). Better Auth's own configuration
 (secrets, providers, its database connection, etc.) lives in
 `src/auth.js`, which isn't covered by this doc.
@@ -117,7 +117,7 @@ every backend start.
 On every `server.js` startup:
 
 ```js
-await initialize_database()   // always runs — CREATE TABLE IF NOT EXISTS, safe
+await initialize_database()   // always runs - CREATE TABLE IF NOT EXISTS, safe
 
 if (process.env.CLEAR_DB === 'true') { await clear_database() }  // destructive
 if (process.env.SEED_DB === 'true')  { await seed_database() }   // destructive
@@ -143,7 +143,7 @@ automatic, on-every-startup triggers.
 When both are `true`, `db.js` monkey-patches `pool.query` and `pool.execute`
 to log every SQL statement and its bound parameters to the console:
 
-This includes whatever was passed in as query params — PINs, emails, etc.
+This includes whatever was passed in as query params - PINs, emails, etc.
 Fine for local debugging; don't leave `VERBOSE_LOG_DB=true` on anywhere logs
 are persisted.
 
@@ -176,9 +176,20 @@ Test files are matched as `*.test.js` under each project's `rootDir`.
 
 ---
 
+## Secrets
+
+### Frontend
+
+For deploying the frontend, the workflow used (found at `.gitea/workflows/frontend-deploy.yml`)
+requires the secrets for the Cloudfare API token and the account ID to be set.
+These can be set using Gitea repository's secrets settings.
+
+---
+
 ## Before deploying remotely
 
 - Configure `.env` to your hosted and running database.
-- Set a long, random `SESSION_SECRET` — don't ship the `a2a-dev-secret` default.
+- Set a long, random `SESSION_SECRET` - don't ship the `a2a-dev-secret` default.
 - Narrow `allowed_origins` in `server.js` to your real domain(s).
 - Double-check `SEED_DB` and `CLEAR_DB` are unset (or `false`) anywhere data matters.
+- Make sure your secrets have been set and are valid.
