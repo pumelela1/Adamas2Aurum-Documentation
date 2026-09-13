@@ -48,6 +48,7 @@ const sidebars = {
             'sprints/sprint-1-meeting-8',
             'sprints/sprint-1-meeting-9',
             'sprints/sprint-2-meeting-16',
+            'sprints/sprint-2-meeting-17',
           ],
 	},
       ],
