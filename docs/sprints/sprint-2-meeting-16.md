@@ -1,10 +1,11 @@
 # Sprint 2 - Meeting 16 Minutes
 
-**Project:** Wits Quest
-**Group:** 404 Found Us
-**Date:** 08 September 2026
-**Time:** 20:05 – 20:20 (08:05 PM – 08:20 PM)
-**Venue:** Team Meeting
+**Project:** Wits Quest  
+**Group:** 404 Found Us  
+**Date:** 08 September 2026  
+**Time:** 20:05 - 21:20 (08:05 PM - 08:20 PM)  
+**Meeting:** Meeting 16, Sprint 2   
+**Minutes Recorded By:** Samukelo  
 
 ---
 
