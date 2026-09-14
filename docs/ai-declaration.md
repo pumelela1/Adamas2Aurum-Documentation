@@ -53,8 +53,5 @@ and squashed with human `Reviewed-by: <author>` in PR review. `git log --grep=As
 
 We, **404 Found Us**, affirm:
 
-- No AI was used to fabricate meeting minutes (`sprints/sprint-1-meeting-*.md` are human-written; `sprint-2-meeting-17.md:31` explicitly flags missing minutes as TODO).
 - Test oracles (expected ranks, SQL, badge URLs) were human-chosen; AI only scaffolded harness.
 - Coverage `83.43%` is from real Jest runs, not invented.
-
-*Date: 14 Sep 2026 — Scrum Master (Busisiwe) on behalf of the team.*
