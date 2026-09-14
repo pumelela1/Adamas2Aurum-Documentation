@@ -186,31 +186,39 @@ $ npm run start:frontend
 
 ## Remote Deployment
 
-### Frontend (Cloudfare Pages)
+### Frontend (Cloudflare Pages)
 
-The deployment of the frontend is done automatically using gitea actions, so no action
-is required in the part of the developer (except making sure that they do not push
-broken/untested code to the `main` branch which is the branch designated for remote
-deployment).
+Deployed automatically via `.gitea/workflows/frontend-deploy.yml` on push to `main`. Requires secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` (Gitea repo settings). The workflow runs `npx wrangler deploy --assets=./app/src/frontend --name website`.
 
-The deployment action can be found at `.gitea/workflows/frontend-deploy.yml`.
-It requires repository secrets to be configured for both the Cloudfare API token and the account ID.
-The workflow accesses these as `secrets.CLOUDFLARE_API_TOKEN` and `secrets.CLOUDFLARE_ACCOUNT_ID`. 
-Currently these must be set within the Gitea repository's secrets settings.
+No manual action except not pushing broken code to `main`.
 
-### Backend
+### Backend (Render via GitHub Mirror)
 
-...
+Gitea `sdp.ms.wits.ac.za` is not reachable by Render, so a `--mirror` to GitHub is kept (see `implementation/backend.md`):
+
+```bash
+git clone --mirror https://sdp.ms.wits.ac.za/404-found-us/Adamas2Aurum.git
+cd Adamas2Aurum.git
+git remote add github https://github.com/Busisiwe-Mnguni/Adamas2Aurum-backend-deployment.git
+git push --mirror github
+# on new commits: git fetch -p origin && git push --mirror github
+```
+
+Render Web Service (`dev` branch, root `app/src/backend`, `Node`, `npm install && npm run build`, `npm start`, Free) watches the GitHub mirror. Env vars set in Render dashboard: `DB_HOST/PORT/USER/PASSWORD/NAME/SSL`, `BETTER_AUTH_SECRET/URL`, `GOOGLE_CLIENT_ID/SECRET`, `SESSION_SECRET`, `SEED_DB=false`. See `configuration.md`.
+
+Split-origin CORS/cookies: `allowed_origins` extended, cookies `secure:true, sameSite:'none'`, frontend `API_BASE` points to Render URL, OAuth redirects registered for both domains.
+
+### Database (Aiven)
+
+No deploy step — backend `initialize_database()` runs `CREATE TABLE IF NOT EXISTS` + `ensure_curation_schema()` migration idempotently on every boot (see `implementation/curation.md`). For destructive schema changes on Aiven shared DB, coordinate in chat then `npm run db:seed` (or `ALTER TABLE` versioning future work — see `implementation/database.md`).
+
+### CI/CD (Gitea Actions)
+
+- `test.yml` — unit tests on push/PR `dev,main`.
+- `ci.yml` — Node 20, `npm ci`, `npm run test:ci` (`--ci --coverage` with 70% threshold), `jest-coverage-badges` → `badges/`, Shields `badge-tests.svg`, `git commit [skip ci]` + push as `gitea-actions`, artifact `coverage-report` 14d, final `exit 1` if `steps.tests.outcome==failure`.
+- `format-check.yml` — Prettier. See `deployment/ci.md`.
 
 ### Database
 
-The developer has nothing to do in this case, except make sure that if some table was
-altered or modified in the `app/src/backend/db/schema.sql` in one of the
-`CREATE TABLE IF NOT EXISTS` statements, they have the responsibility of running
-`npm run db:reset` to ensure that the table is updated in Aiven (**Note**: This is destructive
-as it deletes tables).
-
-Database migration will have to be a worked upon aspect in the future.
-One of the solutions is using some type of versioning system and using `ALTER TABLE`
-when modifying a table.
+Handled as above. For local, see steps 1–3. Migration via `ALTER TABLE` versioning is future work.
 

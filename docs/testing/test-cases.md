@@ -1,93 +1,85 @@
+---
+sidebar_position: 2
+---
+
 # Test Cases
 
-A catalogue of what the current test suite covers. Every test listed
-here lives in a `*.test.js` file next to the code it tests and runs
-via `npm test` at the repository root.
+Catalogue as of 14 Sep 2026 — 19 suites, 207 tests, `npm run test:coverage` → `All 83.43%`. Every file lives as `*.test.js` next to its source and runs via Gitea `ci.yml`.
 
-## Backend - `routes/leaderboard.test.js`
+## Backend — `routes/events.test.js` (Sprint 3 curation, 14 tests)
 
-**9 tests.** Integration-level: mounts the leaderboard router on a
-minimal Express app, spins up a real HTTP listener on an ephemeral
-port, mocks only the database pool, and drives requests with the
-built-in `fetch`.
+| # | Test | Verifies |
+|---|------|----------|
+| 1 | public returns only PUBLISHED when column exists | `GET /api/events` → `WHERE curation_status='PUBLISHED'` |
+| 2 | falls back when column missing | No `curation_status` in SQL |
+| 3 | `GET ?all=true` 401/403 | Auth + author gate |
+| 4 | POST 401/400 missing fields | Validation |
+| 5 | POST 400 invalid `curation_status` | `VALID_CURATION` enum |
+| 6 | POST 201 DRAFT default (both columns) | Insert includes `curation_status`+`campaign_id` |
+| 7 | PUT 400 invalid `DRAFT→PUBLISHED` | `TRANSITIONS` table |
+| 8 | PUT 200 `DRAFT→IN_REVIEW` | Valid transition |
+| 9 | POST `/:id/transition` 401/403/400 invalid/missing/race/no-questions/Already | Full curation state machine |
+| 10 | POST `/:id/retire` 200 sets `RETIRED, is_active=FALSE` | Retire alias |
+| | | *Mock: `SHOW COLUMNS` → `hasCurationColumn`, ephemeral Express+fetch* |
 
-### `GET /api/leaderboard` (public read)
+## Backend — `routes/campaigns.test.js` (11 tests)
 
-| # | Test | What it verifies |
-| --- | --- | --- |
-| 1 | Returns paginated entries with global 1-based rank | Response shape (`entries`, `total`, `limit`, `offset`), rank values computed from offset, points ordering |
-| 2 | Offset shifts the 1-based rank | Requesting `?offset=50` reports the first returned row as rank 51, not rank 1 |
-| 3 | Clamps `limit` into `[1, 100]` and `offset >= 0` | `?limit=99999&offset=-5` returns `limit: 100, offset: 0` - no unbounded query possible |
-| 4 | Falls back to defaults on non-numeric params | `?limit=banana&offset=` returns `limit: 50, offset: 0` |
-| 5 | Is public - no session required | Unauthenticated request returns 200, not 401 |
+`GET /` public/401/403, `POST` 401/403/400 name/400 status/201, `PUT` 404/200, `DELETE` unlinks, `POST /:id/events` 400/200
 
-### `GET /api/leaderboard/me` (session required)
+## Backend — `routes/analytics.test.js` (8 tests)
 
-| # | Test | What it verifies |
-| --- | --- | --- |
-| 6 | 401s when there is no session | Endpoint rejects anonymous callers before touching the DB (asserted by `pool.query` never being called) |
-| 7 | Returns rank, points, total, and neighbours | Happy path: rank is computed from `ahead + 1`, points and total are surfaced, neighbour window is non-empty |
-| 8 | 404s when the session points at a user that no longer exists | A stale session cookie (user deleted mid-session) returns 404, not 500 |
+`GET /questions/hard` 401/403/200 with options + empty, `GET /events/stale` 401/200, `GET /overview` 401/200 hard/stale counts
 
-**Mock strategy.** The test file calls `jest.unstable_mockModule('../utils/db.js', ...)` at the top so the router imports a mocked `pool` instead of the real MySQL connection. The mock records SQL calls and returns canned rows; tests assert on the returned HTTP response, not on SQL strings.
+## Backend — `routes/cards.test.js` (15 tests), `questions.test.js` (15), `event_pool.test.js` (11), `auth.test.js` (11)
 
----
+- **Cards:** `GET /`/`/:id`, `GET /collection/mine` 401/200, `POST` 401/403/400 missing/invalid category/rarity/201, `PUT` 404, `DELETE` 409 referenced/200, `POST /sell` 400 quantity/404 not-owned/400 last-copy/200 duplicate (RARE 20*2)
+- **Questions:** `GET /:id/questions` with options array, POST 401/403/400 type/MC correctAnswer TRUE_FALSE/404 event/201 MC/TF/FB, PUT 404/200, DELETE 404/200 (tx `getConnection` mock)
+- **Auth:** `POST /login` 400/401 not-found/401 pin/200 + roles + password alias, `POST /register` 400/400 exists/201, `GET /me` 401/200, `POST /logout` 200
+- **Pool:** `GET` 401/403/200, `POST` 400 card_id/400 weight/201/409 duplicate, `PUT` 400/200/404, `DELETE` 200/404
 
-## Backend - `services/card_award.test.js`
+## Backend — `routes/leaderboard.test.js` (9), `routes/trivia.test.js` (13), `routes/sync.test.js` (14), `services/card_award.test.js` (10)
 
-**10 tests.** Unit-level: exercises the once-only card-award logic with a hand-rolled fake transaction connection.
+Leaderboard paginated rank 1-based, clamp `limit[1,100]`; Trivia `isEventPlayable` (PUBLISHED gate, location, server-timed), `is_correct` never leaked, `points_awarded` time-decay; Sync deferred `client_timestamp` window/geofence; Card award once-only race `ER_DUP_ENTRY`.
 
-### `canAwardCard` - eligibility check
+## Backend — `utils/response.test.js` (2), `services/card_award` already 100%
 
-| # | Test | What it verifies |
-| --- | --- | --- |
-| 9 | Returns true when the player has never won this event | First-time player is eligible |
-| 10 | Returns false once a prior correct attempt exists | A single prior win blocks any further award, regardless of retries |
-| 11 | A prior WRONG attempt does not block eligibility | Retry-after-loss path: wrong attempts don't count as wins |
+`error`/`success` helpers → mocked `res.status().json()`.
 
-### `getEventCardForSpeed` - card selection
+## Frontend — `js/utils.test.js` (11 tests, 95.2%)
 
-| # | Test | What it verifies |
-| --- | --- | --- |
-| 12 | Returns the first pool card that still has copies available | Pool query returns a card and the function returns it unchanged |
-| 13 | Returns null when the event has no awardable card configured | Empty pool yields `null`, not an error |
-| 14 | Faster answers land in a rarer bracket than slower ones | `elapsed_fraction = 0` selects the LEGENDARY card at pool index 0; `elapsed_fraction ≈ 1` selects the COMMON card at index 1 |
+`esc` HTML, `formatDT`/`toDatetimeLocal`/`toUtcIso` null/invalid/valid, `buildCardBody` title XSS + DRAFT/PUBLISHED default + IN_REVIEW gold + campaign pill, `curationBadge`, `showToast` timer
 
-### `awardCardIfEligible` - the atomic check-and-award
+## Frontend — `js/general.test.js` (3, 100%)
 
-| # | Test | What it verifies |
-| --- | --- | --- |
-| 15 | Scenario 1 - first correct answer awards the card | Happy path: award ledger row inserted, inventory upserted, copies counter incremented |
-| 16 | Scenario 2 - retry after a prior win awards NO second card | Idempotence: no writes at all on a losing retry |
-| 17 | Scenario 3 - retry after a loss still earns the card | The prior wrong attempt doesn't count as a win; the eventual correct answer is awarded |
-| 18 | Event with no awardable card awards nothing and does not throw | Graceful degradation, no exception |
-| 19 | Scenario 4 - two near-simultaneous first attempts: the race loser gets no card | Simulates the `UNIQUE(user_id, event_id)` backstop firing: the losing INSERT throws `ER_DUP_ENTRY` and the function returns `RACE_LOST` without touching inventory |
-| 20 | A real (non-duplicate) DB error re-throws so the transaction rolls back | Only `ER_DUP_ENTRY` is caught; any other DB error propagates so the caller can roll back |
+`distance()` haversine 0, 111km, Wits-Constitution Hill 0.5–2km
 
-**Mock strategy.** The file builds a fake `conn` object with a `query` method that pattern-matches the SQL it receives and returns canned responses. Side-effecting queries (INSERT, UPDATE) increment counters on `conn.calls`, which the assertions then inspect. This lets the tests cover race conditions and error paths that would be difficult to trigger against a real database.
+## Frontend — `js/icons.test.js` (3, 100%)
 
----
+`svgIcon` known/unknown
 
-## Frontend - `js/geolocation.test.js`
+## Frontend — `js/campus-style.test.js` (9, 94.9%)
 
-**1 test.** Unit-level: verifies the browser geolocation wrapper resolves with the expected coordinate tuple.
+Constants, `isInsideCampus` bbox, `createCampusStyle` layers, `applyChromeTheme` night/day, `applyMapTheme` delegates, `resetCamera`, `startDayNightCycle`/`startChromeDayNightCycle` stop fns, `addGroundTexture` null/layer-exists + canvas mock
 
-| # | Test | What it verifies |
-| --- | --- | --- |
-| 21 | Resolves with `[latitude, longitude]` on success | `navigator.geolocation.getCurrentPosition` is called exactly once, and the wrapper's promise resolves with the correct tuple |
+## Frontend — `js/auth-helpers.test.js` (11, 88.8%)
 
-**Mock strategy.** The test replaces `global.navigator.geolocation` with a hand-rolled object whose `getCurrentPosition` immediately invokes its success callback. `afterEach` restores the original descriptor so subsequent tests are unaffected.
+`isAdmin` all `ADMIN_ROLES`, `redirectAfterLogin` console vs events, `logout` dual fetch, `updateAuthNav` logged-out/player/admin, refresh dedup, avatar click toggles menu, soon-notify, icon fallback
 
----
+## Frontend — `js/geolocation.test.js` (2), `js/daynight.test.js` (5)
 
-## What is deliberately not covered
+Wrapper resolves tuple; `nightFactorAt` deep night 1, midday 0, smooth dawn/dusk, [0,1].
 
-- **Frontend DOM behaviour.** `js/leaderboard.js` and `js/console.js`
-  are not tested in the current suite. Both were verified manually in
-  the browser.
-- **WebSocket battle logic.** `websocket/battle_socket.js` and
-  `websocket/battle_state.js` have no automated tests. Battle logic
-  was verified manually during development.
-- **Third-party integrations.** Better Auth, Google OAuth, and
-  Cloudflare Pages deployment are not covered by the test suite.
+## What Is Still Manual
 
+- `js/leaderboard.js` DOM (manual browser), `websocket/battle` (manual lobby), `main.js`/`events.js` full map (polling verified manually). Tracked as tech-debt in `test-plan.md`.
+
+## How to Run
+
+```bash
+npm run test              # 207
+npm run test:coverage     # table + All 83.43%
+npm run test:ci           # --ci --coverage + threshold 70% (fails pipeline if below)
+npm run badges            # jest-coverage-badges → badges/*.svg
+```
+
+Artifacts: `coverage/lcov-report/` (upload 14d), `badges/badge-*.svg` (5) rendered in `README.md`.

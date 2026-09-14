@@ -6,6 +6,7 @@
 const sidebars = {
   documentationSidebar: [
     'introduction',
+    'ai-declaration',
 
     {
       type: 'category',
@@ -23,9 +24,14 @@ const sidebars = {
       label: 'Project Management',
       items: [
         'project-management/overview',
+        'project-management/methodology',
+        'project-management/work-tracker',
+        'project-management/git-methodology',
         'project-management/meetings',
         'project-management/user-stories',
         'project-management/product-backlog',
+        'project-management/project-plan',
+        'project-management/burndown',
       ],
     },
 
@@ -60,15 +66,16 @@ const sidebars = {
       items: [
         'design/design-documents',
         'design/requirements',
-        {
-          type: 'category',
-          label: 'Architecture',
-          items: [
+    {
+      type: 'category',
+      label: 'Architecture',
+      items: [
             'design/architecture/system-architecture',
+            'design/architecture/component-diagram',
             'design/architecture/deployment-diagram',
             'design/architecture/database-design',
-          ],
-        },
+      ],
+    },
       ],
     },
 
@@ -78,7 +85,9 @@ const sidebars = {
       items: [
         'implementation/overview',
         'implementation/frontend',
+        'implementation/map-system',
         'implementation/backend',
+        'implementation/curation',
         'implementation/api-reference',
         'implementation/authentication',
         'implementation/database',
@@ -102,6 +111,7 @@ const sidebars = {
         'deployment/overview',
         'deployment/deployment',
         'deployment/configuration',
+        'deployment/ci',
         'deployment/troubleshooting',
       ],
     },

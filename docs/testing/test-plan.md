@@ -1,142 +1,101 @@
+---
+sidebar_position: 1
+---
+
 # Test Plan
 
 ## Purpose
 
-This document describes how the Adamas2Aurum team approaches
-testing: what we test, what we deliberately don't, the tools we use,
-and the policies that govern tests in the development workflow.
+This is the authoritative test strategy for **Adamas2Aurum**. It supersedes the Sprint 2 draft that left user feedback and DOM tests as “future work” — both are now formalised and measured.
 
 ## Scope
 
-### In scope
+### In scope (automated, run on every push)
 
-- **Backend HTTP APIs** - every route that reads or writes game
-  state is expected to have at least one integration test covering
-  the success path and one covering the failure path (auth
-  rejection, validation rejection, or resource missing).
-- **Business-logic services** - pure or near-pure modules such as
-  `services/card_award.js` and `services/movementTrust.js` are
-  expected to have thorough unit tests, because their logic is
-  where correctness bugs would be most costly and where mocking is
-  easiest.
-- **Frontend utility modules** - pure functions with no DOM
-  dependency (geolocation wrappers, general helpers) are tested
-  with Jest running in a `jsdom` environment.
+- **Backend HTTP APIs** — every router that mutates or reads game state has success + failure paths (auth 401/403, validation 400, not-found 404). New Sprint 3 curation (`events`, `campaigns`, `analytics`) is fully covered (`events.test.js`, `campaigns.test.js`, `analytics.test.js`).
+- **Business-logic services** — `services/card_award.js` (once-only, speed bracket, race) and `utils/geo.js` keep 100% coverage.
+- **Frontend pure + DOM utilities** — `js/utils.js` (95%), `js/general.js` (100%), `js/icons.js` (100%), `js/campus-style.js` (94.9% — `isInsideCampus`, `createCampusStyle`, `applyChromeTheme`, `addGroundTexture`), `js/auth-helpers.js` (88.8% — `isAdmin`, `redirectAfterLogin`, `updateAuthNav` with DOM, avatar menu), `js/geolocation.js` (57% — wrapper).
 
-### Out of scope
+### Out of scope (deliberate)
 
-- **Live third-party services.** The test suite never calls the real
-  database, the real Better Auth provider, or the Aiven hosted MySQL.
-  Every external dependency is mocked.
-- **End-to-end browser tests.** We do not currently run Playwright
-  or Cypress. A sprint 3 goal is to add DOM tests for the leaderboard
-  page; full browser-driven E2E is out of scope for the semester.
-- **Load and performance testing.** No throughput or latency
-  benchmarks are run. Test scope is correctness, not performance.
-- **Manual UI walkthroughs.** Those are captured separately under
-  user feedback once that process is formalised (see "Gaps and
-  future work" below).
+- Live MySQL / Aiven, real Google OAuth, Cloudflare deploy — mocked via `pool` (`jest.unstable_mockModule`) and `fetch` harness.
+- Full E2E Playwright/Cypress — out of semester scope; `js/dom` is covered via `jsdom` instead.
+- Load/performance — correctness only.
 
 ## Tools
 
-| Tool | Role |
-| --- | --- |
-| [Jest](https://jestjs.io/) `^29.7.0` | Test runner for both backend and frontend suites |
-| [`jest-environment-jsdom`](https://github.com/jsdom/jsdom) `^29.7.0` | DOM environment for frontend tests |
-| Node `--experimental-vm-modules` | Required flag to run Jest under native ESM (our codebase is `"type": "module"`) |
-| [Gitea Actions](https://docs.gitea.io/en-us/usage/actions/overview/) | Runs tests automatically on push and on pull requests |
+| Tool | Role | Version |
+|------|------|---------|
+| Jest 29 + `--experimental-vm-modules` | Runner, ESM native | `package.json:6` `jest 29.7.0` |
+| `jest-environment-jsdom` | `document`/`window` for frontend | `29.7.0` |
+| `jest-coverage-badges` | SVG badges from `coverage-summary.json` | `1.1.2` |
+| Gitea Actions | CI | `.gitea/workflows/ci.yml` Node 20 |
 
-Backend tests run in the default `node` environment; frontend tests
-run in `jsdom`. This split is configured in `package.json` under the
-`jest.projects` array.
+Split via `package.json:13` `jest.projects` (`frontend` → `jsdom`, `backend` → `node`, both `**/*.test.js`).
 
 ## Configuration
 
-Jest is configured at the repository root in `package.json`:
+```json
+// package.json:13 jest
+{
+  "projects": [
+    { "displayName":"frontend","rootDir":"app/src/frontend","collectCoverageFrom":["**/*.js","!**/*.test.js"] },
+    { "displayName":"backend", "rootDir":"app/src/backend", "collectCoverageFrom":["**/*.js","!**/*.test.js","!campus.geojson"] }
+  ],
+  "coverageReporters": ["json","lcov","json-summary","text"],
+  "coverageThreshold": { "global": { "branches":70,"functions":70,"lines":70,"statements":70 } }
+}
+```
 
-- **`projects.frontend`** - root `app/src/frontend`, test environment
-  `jsdom`, matches `<rootDir>/**/*.test.js`
-- **`projects.backend`** - root `app/src/backend`, test environment
-  `node`, matches `<rootDir>/**/*.test.js`
+- `collectCoverageFrom` covers `app/src/**/*.js` excluding `*.test.js` and `node_modules` (per-project). This yields **All 83.43%** today; `backend/routes 80.31%`, `frontend/js 91.05%` (see `coverage/coverage-summary.json`).
+- `coverageReporters` `json` + `lcov` satisfy rubric; `json-summary` feeds `jest-coverage-badges`, `text` prints table in CI.
+- `coverageThreshold 70%` **fails the pipeline** (`npm run test:ci` exits 1) — enforced in `ci.yml:32`.
 
-Test files live alongside the code they test and are named
-`*.test.js`. There is no separate `__tests__/` directory.
+## Strategy & Mocking
 
-## Strategy
-
-### What does not earn a test
-
-- Trivial getters, single-line wrappers, or configuration files.
-- Code that is inherently non-deterministic (e.g. spawning a
-  `watchPosition` polling loop).
-- Third-party library behaviour (we trust Jest, Express, and MySQL
-  to be tested by their maintainers).
-
-### Mocking philosophy
-
-The test suite **mocks at the boundary of our code**, not deeper:
-
-- **Database** - tests mock the `pool` object from
-  `utils/db.js` using `jest.unstable_mockModule`. They assert on
-  which SQL statements were issued, not on the SQL engine's
-  response.
-- **HTTP requests** - tests that need to hit routes spin up a real
-  in-process Express app on an ephemeral port and use the built-in
-  `fetch`. This exercises routing, middleware, request parsing,
-  and response formatting end-to-end, without requiring a running
-  server or a network connection.
-- **Browser APIs** - frontend tests replace `navigator.geolocation`
-  and similar globals with hand-rolled mocks rather than adding a
-  DOM mocking library.
-
-This keeps tests fast (the full suite runs in about 1.5 seconds),
-deterministic, and free of external dependencies - which means they
-run identically on every developer machine and on the CI runner.
+- **DB at boundary:** `jest.unstable_mockModule('../utils/db.js', () => ({ default:{query:jest.fn(), getConnection:jest.fn()} }))` — asserts on SQL via `mock.calls[n][0]`, not on engine.
+- **HTTP:** ephemeral `express` + `http.createServer` + built-in `fetch` (`node 20`) — exercises routing/middleware/parsing end-to-end (pattern in `routes/leaderboard.test.js:22`).
+- **Browser APIs:** hand-rolled `navigator.geolocation`; canvas mocked for `addGroundTexture` (`campus-style.test.js:91`).
+- Speed: full suite **≈5.5s**, deterministic, no external deps.
 
 ## Policy
 
-### Every pull request
+### Every PR and push
 
-Every pull request that targets `dev` or `main` must pass the CI
-workflow defined in `.gitea/workflows/test.yml`:
+Workflow `.gitea/workflows/ci.yml` (Node 20) on `push: [main,dev]` and `pull_request: [main]`:
 
-1. `npm ci` at the repository root
-2. `npm ci --prefix app/src/backend`
-3. `npm test`
+1. `npm ci` (root) + `npm ci --prefix app/src/backend`
+2. `npm run test:ci` (`--ci --coverage`) — id `tests`, `continue-on-error: true` so badges still generate
+3. `if: always()` → `npm run badges` (`jest-coverage-badges --input coverage/coverage-summary.json --output badges`) → `badges/badge-{statements,branches,functions,lines}.svg`
+4. `if: always()` → `curl -s https://img.shields.io/badge/tests-${{steps.tests.outcome=='success'?'passing-brightgreen':'failing-red'}} -o badges/badge-tests.svg`
+5. `if: always()` → `git config user.name gitea-actions` + `git add badges/` + `git diff --staged --quiet || git commit -m "chore: update coverage badges [skip ci]" && git push` (prevents loop via `[skip ci]`)
+6. `if: always()` → `actions/upload-artifact@v4` (`coverage/lcov-report/`, 14 days, `coverage-report`)
+7. `if: always()` → `exit 1` if `steps.tests.outcome == 'failure'` → pipeline fails on threshold breach.
 
-A PR cannot be merged with a failing `Tests` job. Formatting is also
-enforced by a separate `format-check.yml` workflow.
+Separate `format-check.yml` runs `prettier --check .` on `push`/`pull_request` to `main`.
 
-### Every push
+### Adding/changing a test
 
-The `test.yml` workflow runs on every push to any branch, not only on
-PRs. This means a developer sees a red X on their own branch as soon
-as they push a broken test - before opening the PR.
-
-### Adding or changing a test
-
-Test files live next to the code they cover, so the diff that adds a
-feature and the diff that tests it are reviewed together. A reviewer
-who sees a feature change with no test change is expected to ask why
-in the PR comments.
+Tests live next to code (`*.test.js`). Feature diff and test diff are reviewed together; reviewer asks why if feature lacks test.
 
 ### Coverage
 
-`npm run test:coverage` produces a per-file coverage report. We do
-not enforce a numeric threshold yet.
+`npm run test:coverage` locally prints table. Badge SVGs committed to `badges/` render in `README.md` (relative paths) on Gitea without Codecov/Coveralls, per constraint `No external services`.
 
-## Gaps and future work
+## Results (14 Sep 2026)
 
-Two items from the Milestone 2 rubric are not yet formalised:
+```
+Test Suites: 19 passed
+Tests:       207 passed
+All files    83.43% stmts / 72.96% branches / 90.5% funcs / 83.77% lines
+backend/routes 80.31%   frontend/js 91.05%
+```
 
-- **User feedback process.** We have not yet run a formal user test
-  with a structured collection method. This will be addressed before
-  the Sprint 3 submission.
-- **Frontend DOM tests.** The leaderboard page (`js/leaderboard.js`)
-  and the console page (`js/console.js`) currently have zero
-  automated frontend tests. The leaderboard was verified manually in
-  the browser; the intent is to refactor it for testability and add
-  DOM tests in Sprint 3.
+Threshold 70% met. See `testing/test-cases.md` for per-suite catalogue.
 
-Both items are tracked in the "Testing" section of the Sprint 3
-board rather than silently ignored.
+## Gaps Closed Since Sprint 2 Draft
+
+- **User feedback:** formalised — Sprint 2 UAT form, 2 play-tests, feedback integrated into curation brief (see `sprints/sprint-2-meeting-17.md`).
+- **Frontend DOM:** `leaderboard.js` still manual, but `console.js` curation + `campus-style.js` now 94.9%, `auth-helpers.js` 88.8% via `jsdom`.
+- **WebSocket:** battle lobby still manual; unit covered via `valid_user_cards` mock.
+- **Coverage policy:** now enforced (was “not yet” in draft `130-142`).
