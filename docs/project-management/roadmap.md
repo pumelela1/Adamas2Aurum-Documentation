@@ -19,7 +19,7 @@ Thursday, and Sunday.
 
 ---
 
-## Sprint 1 - Core Loop (Weeks 1–3) ✅
+## Sprint 1 - Core Loop (Weeks 1–3)
 
 Establishing identity, the map, events, and the first playable game loop.
 
@@ -38,7 +38,7 @@ Establishing identity, the map, events, and the first playable game loop.
 
 ---
 
-## Sprint 2 - Offline, Trust & Engagement (Weeks 4–6) ✅
+## Sprint 2 - Offline, Trust & Engagement (Weeks 4–6)
 
 Making the game resilient to bad connectivity and harder to spoof, plus the
 first layer of retention mechanics.
@@ -58,7 +58,7 @@ first layer of retention mechanics.
 
 ---
 
-## Sprint 3 - Real-Time, Fraud & Live Ops (Weeks 7–9) 🔄
+## Sprint 3 - Real-Time, Fraud & Live Ops (Weeks 7–9)
 
 Live multiplayer, anti-cheat maturity, and the tooling to run the game as
 an ongoing service. Team assignments are still to be discussed. 
@@ -78,7 +78,7 @@ an ongoing service. Team assignments are still to be discussed.
 
 ---
 
-## Week 10 - Wrap-up & Review (05 Oct – 11 Oct 2026) ⏳
+## Week 10 - Wrap-up & Review (05 Oct – 11 Oct 2026)
 
 Buffer week for stabilization, final QA, and demo prep. No stories are
 currently scheduled here. It will be for spillovers from Sprint 3 and final polish.
