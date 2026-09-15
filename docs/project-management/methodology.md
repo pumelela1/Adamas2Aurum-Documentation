@@ -2,7 +2,7 @@
 sidebar_position: 7
 ---
 
-# Project Methodology — Scrum (with Kanban Inside)
+# Project Methodology
 
 ## Choice & Motivation
 

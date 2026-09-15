@@ -24,6 +24,7 @@ const sidebars = {
       label: 'Project Management',
       items: [
         'project-management/overview',
+        'project-management/roadmap',
         'project-management/methodology',
         'project-management/work-tracker',
         'project-management/git-methodology',

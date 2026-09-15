@@ -6,6 +6,13 @@
 
 ---
 
+## Roadmap
+
+The rough roadmap (created using our user stories as a reference) can be found
+[here](./roadmap.md).
+
+---
+
 ## Planned Meetings
 Our planned meetings can be found [here](./meetings.md).
 

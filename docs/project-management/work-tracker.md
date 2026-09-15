@@ -2,7 +2,7 @@
 sidebar_position: 8
 ---
 
-# Work Tracker — Taiga
+# Work Tracker
 
 Tool: **Taiga** Kanban (`https://taiga.sdp.ms.wits.ac.za/project/adamas2aurum`, Wits SSO) — chosen over Notion for subtask support and simplicity (`technology-stack.md`).
 
