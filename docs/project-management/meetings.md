@@ -46,9 +46,9 @@ and moved through the development process as work progresses.
 
 | Meeting Number | Date                     | Meeting Minutes |
 | -------------- | ------------------------ | --------------- |
-| Meeting 10     | Tuesday, 25 August 2026  | [View](#)       |
-| Meeting 11     | Thursday, 27 August 2026 | [View](#)       |
-| Meeting 12     | Sunday, 30 August 2026   | [View](#)       |
+| Meeting 10     | Tuesday, 25 August 2026  | [View](../sprints/sprint-1-meeting-10.md)       |
+| Meeting 11     | Thursday, 27 August 2026 | [View](../sprints/sprint-1-meeting-11.md)       |
+| Meeting 12     | Sunday, 30 August 2026   | [View](../sprints/sprint-1-meeting-12.md)       |
 
 ---
 
@@ -56,9 +56,9 @@ and moved through the development process as work progresses.
 
 | Meeting Number | Date                        | Meeting Minutes |
 | -------------- | --------------------------- | --------------- |
-| Meeting 13     | Tuesday, 01 September 2026  | [View](#)       |
-| Meeting 14     | Thursday, 03 September 2026 | [View](#)       |
-| Meeting 15     | Sunday, 06 September 2026   | [View](#)       |
+| Meeting 13     | Tuesday, 01 September 2026  | [View](../sprints/sprint-2-meeting-13.md)       |
+| Meeting 14     | Thursday, 03 September 2026 | [View](../sprints/sprint-2-meeting-14.md)       |
+| Meeting 15     | Sunday, 06 September 2026   | [View](../sprints/sprint-2-meeting-15.md)       |
 
 ---
 
