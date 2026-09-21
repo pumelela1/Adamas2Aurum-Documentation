@@ -37,7 +37,6 @@ Create a new account with email and PIN.
   "name": "Test Player",
   "pin": "1234"
 }
-
 ```
 
 **Response `201`:**
@@ -47,7 +46,6 @@ Create a new account with email and PIN.
   "message": "Account created",
   "user_id": 5
 }
-
 ```
 
 ### `POST /api/auth/login`
@@ -64,7 +62,6 @@ Sign in with email and PIN. Sets a session cookie.
   "email": "player@example.com",
   "pin": "1234"
 }
-
 ```
 
 **Response `200`:**
@@ -79,7 +76,6 @@ Sign in with email and PIN. Sets a session cookie.
     "points": 105
   }
 }
-
 ```
 
 ### `GET /api/auth/me`
@@ -140,7 +136,6 @@ List active events whose time window includes the current moment. Publicly used 
     "author_id": 3
   }
 ]
-
 ```
 
 ### `GET /api/events/:id`
@@ -158,7 +153,7 @@ Create a new event.
 * **Auth required:** Yes (`SUPER_ADMIN` or `EVENT_AUTHOR` role)
 * **Errors:** `400` (missing required fields), `401`, `403`
 
-**Request Body:** *(Fields marked * in your logic are required)*
+**Request Body:**
 
 ```json
 {
@@ -176,7 +171,6 @@ Create a new event.
   "max_attempts_per_window": 1,
   "is_active": true
 }
-
 ```
 
 **Response `201`:** `{ "message": "Event created", "event_id": 7 }`
@@ -220,7 +214,6 @@ List the cards an event can award.
     "image_url": "…"
   }
 ]
-
 ```
 
 ### `POST /api/events/:eventId/pool`
@@ -234,7 +227,6 @@ Add a card to an event's award pool.
 
 ```json
 { "card_id": 3, "weight": 1, "global_copy_limit": 50 }
-
 ```
 
 ### `PUT /api/events/:eventId/pool/:poolId`
@@ -265,7 +257,6 @@ Generate an expiring QR fallback token for an event (used when GPS accuracy is t
   "qr_url": "http://localhost:3000/qr/abc123…",
   "expires_at": "2026-09-12T18:00:00.000Z"
 }
-
 ```
 
 ### `POST /api/events/:id/verify-qr`
@@ -279,21 +270,19 @@ Verify a QR token submitted by a player. Writes a `FALLBACK_QR` row to `location
 
 ```json
 { "token": "abc123…" }
-
 ```
 
 **Response `200`:**
 
 ```json
 { "location_check_id": 42, "status": "FALLBACK_QR" }
-
 ```
 
 ---
 
 ## Questions (Authoring)
 
-**Mount:** `/api` (Root level-router serves both event-scoped and direct-question paths)
+**Mount:** `/api` (Root-level router serves both event-scoped and direct-question paths)
 
 **Router:** `routes/questions.js`
 
@@ -317,7 +306,6 @@ List all questions attached to an event. *The correct answer is not included in 
     "difficulty": 1
   }
 ]
-
 ```
 
 ### `POST /api/events/:eventId/questions`
@@ -336,7 +324,6 @@ Create a question for an event.
   "correctAnswer": "Answer A",
   "options": ["Answer A", "Answer B", "Answer C"]
 }
-
 ```
 
 *(Valid types: `MULTIPLE_CHOICE`, `TRUE_FALSE`, `FILL_BLANK`)*
@@ -397,7 +384,6 @@ Fetch a random question for an event. *The correct option is never included in t
     "earned_card": null
   }
 }
-
 ```
 
 **Response `200` (GPS too poor, QR fallback required):**
@@ -409,7 +395,6 @@ Fetch a random question for an event. *The correct option is never included in t
   "threshold_m": 50,
   "reported_accuracy_m": 75
 }
-
 ```
 
 ### `POST /api/trivia/submit`
@@ -431,7 +416,6 @@ Submit an answer. The server grades it; the client sees the correct answer only 
   "claimed_lng": 28.0285,
   "timed_out": false
 }
-
 ```
 
 *(On timeout: omit `selected_option_id` and set `"timed_out": true`)*
@@ -462,7 +446,6 @@ Submit an answer. The server grades it; the client sees the correct answer only 
   "correct_option_text": "Answer B",
   "message": "Correct! You earned 18 points and a new card: …"
 }
-
 ```
 
 ### `POST /api/trivia/offline-attempts`
@@ -488,7 +471,6 @@ Sync a batch of offline attempts. Evaluated against their captured `client_times
     }
   ]
 }
-
 ```
 
 **Response `200`:**
@@ -508,7 +490,6 @@ Sync a batch of offline attempts. Evaluated against their captured `client_times
     }
   ]
 }
-
 ```
 
 **Sync Status Codes:**
@@ -551,7 +532,7 @@ Return all cards with availability info (used by the console's card-pool picker)
 
 * **Auth required:** Yes
 
-### `POST /api/cards/check-existence` *(Endpoint inferred from docs)*
+### `POST /api/cards/check-existence`
 
 Given a list of card IDs, return the ones that still exist in the catalogue. Used to reconcile local collections after schema changes.
 
@@ -562,13 +543,6 @@ Given a list of card IDs, return the ones that still exist in the catalogue. Use
 Return the authenticated player's card collection.
 
 * **Auth required:** Yes
-
-**Request Body:**
-
-```json
-{ "card_ids": [1, 2, 3] }
-
-```
 
 ### `POST /api/cards`
 
@@ -592,7 +566,6 @@ Sell a duplicate card for points.
 
 ```json
 { "card_id": 3, "quantity": 1 }
-
 ```
 
 ### `DELETE /api/cards/:id`
@@ -639,7 +612,6 @@ Return a paginated global leaderboard, sorted by points (descending) and user ID
   "limit": 50,
   "offset": 0
 }
-
 ```
 
 ### `GET /api/leaderboard/me`
@@ -656,311 +628,17 @@ Return the current player's rank and a small sliding window of adjacent ranks.
   "points": 105,
   "total_players": 5,
   "entry": { "rank": 2, "user_id": 5, "name": "Test Player", "points": 105 },
-  "neighbours": [ 
-    /* Up to 5 entries around the caller */ 
+  "neighbours": [
+    /* Up to 5 entries around the caller */
   ]
 }
-
 ```
-
----
-
-## System / Miscellaneous
-
-### `GET /api/health`
-
-Health check endpoint to confirm DB connectivity.
-
-* **Auth required:** No
-* **Response `200`:** `{ "success": true, "tables": [...] }`
-
-### `GET /api/me`
-
-Top-level convenience endpoint that mirrors `GET /api/auth/me`. Returns the currently authenticated user.
-
-* **Auth required:** Yes
-
----
-
-## Battles (WebSocket)
-
-**Mount:** `/ws/battle`
-
-**Routers:** `socket_router.js`, `battle_socket.js`
-
-Adamas2Aurum handles live multiplayer and NPC card battles over a persistent WebSocket connection.
-
-### Connection & Authentication
-
-* **Auth required:** Yes. Authentication relies on the same session cookie as the HTTP API. The connection will be rejected with an HTTP `401 Unauthorized` during the upgrade phase if the session is invalid or missing.
-
-
-* **Message Format:** All incoming and outgoing messages must be stringified JSON.
-
-
-* **Reconnection Window:** If a player disconnects during an active battle, they are placed in a timeout state. They have exactly 2 minutes (120,000 ms) to reconnect; otherwise, the match is marked as `ABANDONED`.
-
-
-
-### Client-to-Server Messages
-
-Clients interact with the battle server by sending JSON objects containing a `type` property.
-
-#### `join_lobby`
-
-Places the player in the matchmaking lobby, or gracefully reconnects them to an active/pending battle if one exists.
-
-* **Request:** `{ "type": "join_lobby" }`
-
-
-#### `challenge_player`
-
-Issues a pending PvP battle challenge to an available player in the lobby.
-
-* **Request:** `{ "type": "challenge_player", "target_user_id": 12 }`
-
-
-#### `accept_challenge`
-
-Accepts or declines an incoming PvP match request.
-
-* **Request:**
-
-```json
-{
-  "type": "accept_challenge",
-  "accept": true,
-  "challenger_id": 12
-}
-
-```
-
-#### `start_npc_battle`
-
-Bypasses the lobby and immediately provisions a battle against the CPU using a randomly generated deck.
-
-* **Request:** `{ "type": "start_npc_battle" }`
-
-
-#### `submit_deck`
-
-Commits the player's 5-card deck for an initialized battle.
-
-* **Request:**
-
-```json
-{
-  "type": "submit_deck",
-  "deck": [
-    { "card_id": 1 }, { "card_id": 2 }, { "card_id": 3 }, { "card_id": 4 }, { "card_id": 5 }
-  ]
-}
-
-```
-
-(Note: Decks must contain exactly 5 valid cards)
-
-#### `attack`
-
-Executes a combat turn. The turn is validated against the active player's state and card categories.
-
-* **Request:**
-
-```json
-{
-  "type": "attack",
-  "attacker_slot": 0,
-  "target_slot": 2,
-  "action": "ATTACK"
-}
-
-```
-
-(Valid actions include `ATTACK`, `DEFEND`, `DODGE`, `BUFF`, `DEBUFF`, and `REVIVE`, depending on the card's category)
-
-#### `forfeit`
-
-Forfeits an active battle, immediately awarding the win to the opponent.
-
-* **Request:** `{ "type": "forfeit" }`
-
-
-#### `ping`
-
-Keep-alive mechanism.
-
-* **Request:** `{ "type": "ping" }`
-
-
-### Server-to-Client Events
-
-The server pushes JSON payloads back to connected clients to update their state and respond to actions.
-
-#### `lobby_users`
-
-Broadcasts the list of currently online users resting in the lobby.
-
-**Response:**
-```json
-{
-  "type": "lobby_users",
-  "users": [
-    {
-      "user_id": 12,
-      "username": "Test Player",
-      "name": "Test Player"
-    }
-  ]
-}
-
-```
-
-#### `incoming_challenge`
-
-Notifies a user that they have been challenged to a PvP match.
-
-**Response:**
-```json
-{
-  "type": "incoming_challenge",
-  "from_user_id": 5,
-  "from_username": "ChallengerName"
-}
-
-```
-
-#### `reject_challenge`
-
-Notifies the challenger that their match request was declined or the opponent was busy.
-
-**Response:**
-```json
-{
-  "type": "reject_challenge",
-  "challenger_id": 5
-}
-
-```
-
-#### `battle_started`
-
-Indicates a match has been created and prompts clients to submit their decks. Includes `is_npc: true` if playing against the CPU, or the respective player IDs for PvP.
-
-**Response (PvP):**
-```json
-{
-  "type": "battle_started",
-  "battle_id": 42,
-  "player1_id": 5,
-  "player2_id": 12
-}
-
-```
-
-#### `deck_accepted`
-
-Confirms a successful deck submission while waiting for the opponent.
-
-**Response:**
-```json
-{
-  "type": "deck_accepted",
-  "battle_id": 42,
-  "message": "Deck saved. Waiting for opponent..."
-}
-
-```
-
-#### `state_update`
-
-Delivers the complete, synchronized state of the board. Sent upon reconnection or after both decks are submitted.
-
-**Response:**
-```json
-{
-  "type": "state_update",
-  "battle_id": 42,
-  "state": { 
-    /* large object that has information on the current state of the game */
-  }
-}
-
-```
-
-#### `turn_result`
-
-Delivers the combat log and math results of an executed turn. If the opponent is an NPC, their turn is calculated and included in `opponent_result` within the same payload.
-
-**Response:**
-```json
-{
-  "type": "turn_result",
-  "battle_id": 42,
-  "player_user_id": 5,
-  "winner": -1,
-  "state": { /* Updated board state */ },
-  "player_result": {
-    "action": "ATTACK",
-    "attacker_slot": 0,
-    "target_slot": 2,
-    "landed": true,
-    "damage": 25,
-    "target_health_after": 75
-  },
-  "opponent_result": null 
-}
-
-```
-
-*(Note: `winner` returns `-1` if the match is ongoing, or the `user_id` of the victor if the match has concluded).*
-
-#### `match_results`
-
-Signals the end of the battle (due to knockout, forfeit, or abandonment).
-
-**Response:**
-```json
-{
-  "type": "match_results",
-  "winner": 5
-}
-
-```
-
-*(Note: `winner` is `null` if the match was abandoned by both players).*
-
-#### `error`
-
-Sent if a request fails validation. Often includes a `reject_type` indicating which action failed.
-
-**Response:**
-```json
-{
-  "type": "error",
-  "reject_type": "attack",
-  "message": "Not your turn"
-}
-
-```
-
-#### `pong`
-
-Standard response to a client `ping`.
-
-**Response:**
-```json
-{ "type": "pong" }
-
-```
-
----
 
 ---
 
 ## Trades
 
-Card-for-card swaps between two players. Mounted at `/api/trades`. All
-endpoints require a session.
+Card-for-card swaps between two players. Mounted at `/api/trades`. All endpoints require a session.
 
 ### Trade object
 
@@ -987,107 +665,96 @@ Every trade returned by the endpoints below has the same shape:
     "rarity": "UNCOMMON", "category": "LOCATION", "image_url": "…"
   }
 }
-status is one of PENDING, ACCEPTED, DECLINED, CANCELLED
+```
 
-### 'POST /api/trades'
+*`status` is one of `PENDING`, `ACCEPTED`, `DECLINED`, `CANCELLED`.*
+
+### `POST /api/trades`
+
 Create a new trade offer. The caller is the initiator.
 
-**Auth required:** Yes.
+* **Auth required:** Yes
 
-###Body:
+**Request Body:**
+
+```json
 {
   "receiver_id": 2,
   "initiator_card_id": 10,
   "receiver_card_id": 42
 }
+```
 
-**Response 200:** the newly created trade object (see above).
+* **Response `200`:** The newly created trade object.
+* **Errors:**
+  * `400` — Missing fields, trading with yourself, either party doesn't own their offered card, or the card rarities are too asymmetric.
+  * `403` — One or both accounts are under 1 hour old.
+  * `429` — Initiator has hit the daily trade cap (5 per 24h).
 
-**Errors:**
+### `GET /api/trades/incoming`
 
-400 — missing fields, trading with yourself, either party doesn't own their offered card, or the card rarities are too asymmetric
+Offers where the caller is the receiver, still `PENDING`.
 
-403 — one or both accounts are under 1 hour old
+* **Auth required:** Yes
+* **Response `200`:** Array of trade objects, newest first.
 
-429 — initiator has hit the daily trade cap (5 per 24h)
-
-##GET /api/trades/incoming
-
-Offers where the caller is the receiver, still PENDING.
-
-**Auth required:** Yes.
-
-**Response 200:** array of trade objects, newest first.
-
-##GET /api/trades/outgoing
+### `GET /api/trades/outgoing`
 
 Offers the caller has made, in any status.
 
-**Auth required:** Yes.
+* **Auth required:** Yes
+* **Response `200`:** Array of trade objects, newest first.
 
-**Response 200:** array of trade objects, newest first.
+### `POST /api/trades/:id/accept`
 
-##POST /api/trades/:id/accept
+Atomically execute the swap. This is the only endpoint that moves cards.
 
-Atomically execute the swap. This is the only endpoint that moves
-cards.
+* **Auth required:** Yes. Only the receiver may call this.
+* **Response `200`:** The trade object with `status: "ACCEPTED"`.
+* **Errors:**
+  * `404` — Trade not found.
+  * `403` — Caller is not the receiver.
+  * `409` — Trade is no longer `PENDING`, or one party no longer owns their offered card.
 
-**Auth required:** Yes. Only the receiver may call this.
-
-**Response 200:** the trade object with status: "ACCEPTED".
-
-**Errors:**
-
-404 — trade not found
-
-403 — caller is not the receiver
-
-409 — trade is no longer PENDING, or one party no longer owns
-their offered card
-
-##POST /api/trades/:id/decline
+### `POST /api/trades/:id/decline`
 
 Receiver declines a pending trade. Does not touch cards.
 
-**Auth required:** Yes. Only the receiver may call this.
+* **Auth required:** Yes. Only the receiver may call this.
+* **Response `200`:** `{ "message": "Trade declined" }`
+* **Errors:** `403`, `404`, `409`
 
-**Response 200:** { "message": "Trade declined" }
-
-**Errors:** 403, 404, 409.
-
-##POST /api/trades/:id/cancel
+### `POST /api/trades/:id/cancel`
 
 Initiator withdraws their own pending offer. Does not touch cards.
 
-**Auth required:** Yes. Only the initiator may call this.
+* **Auth required:** Yes. Only the initiator may call this.
+* **Response `200`:** `{ "message": "Trade cancelled" }`
+* **Errors:** `403`, `404`, `409`
 
-**Response 200:** { "message": "Trade cancelled" }
+### Anti-abuse Rules
 
-**Errors:** 403, 404, 409.
-
-##Anti-abuse rules
-All rules are checked at create time, so the receiver never sees an
-offer that would fail on accept:
+All rules are checked at create time, so the receiver never sees an offer that would fail on accept:
 
 | Rule | Threshold |
 | --- | --- |
 | `Daily cap` | Max 5 completed trades per user per rolling 24h |
-| `Daily cap` | abs(rarity_value(int) - rarity_value(recv)) <= 20 |
+| `Rarity balance` | `abs(rarity_value(init) - rarity_value(recv)) <= 20` |
 | `Account age` | Both accounts must be at least 1 hour old |
 
-Rarity values are defined in utils/rarity_points.js (COMMON=5, cUNCOMMON=10, RARE=20, EPIC=40, LEGENDARY=80).
+Rarity values are defined in `utils/rarity_points.js` (`COMMON=5`, `UNCOMMON=10`, `RARE=20`, `EPIC=40`, `LEGENDARY=80`).
 
-##Zones
+---
 
-Territory control. Each event is a "zone", and its owner is the player
-who has accumulated the most points from that event's trivia
-challenges over the last 24 hours. Ownership is resolved at read time
-by a deterministic function, no background jobs.
+## Zones
 
-Mounted at /api/zones.
+Territory control. Each event is a "zone", and its owner is the player who has accumulated the most points from that event's trivia challenges over the last 24 hours. Ownership is resolved at read time by a deterministic function, with no background jobs.
 
-##Zone object
+Mounted at `/api/zones`.
 
+### Zone Object
+
+```json
 {
   "event_id": 1,
   "event_title": "Great Hall",
@@ -1096,24 +763,23 @@ Mounted at /api/zones.
   "score": 120,
   "updated_at": "2026-09-21T15:00:00.000Z"
 }
+```
 
-###Get /api/zones
+### `GET /api/zones`
 
 List every zone that currently has an owner.
 
-**Auth required:** No — public read (matches the leaderboard).
+* **Auth required:** No — public read (matches the leaderboard).
+* **Response `200`:** Array of zone objects, ordered by most recently updated first.
 
-**Response 200:** array of zone objects, ordered by most recently
-updated first.
-
-###GET /api/zones/:eventId
+### `GET /api/zones/:eventId`
 
 Zone detail with the current owner and the recent scoreboard of challengers. Resolves the owner fresh on every call, so the response is always the current truth.
 
-**Auth required:** Yes.
+* **Auth required:** Yes
+* **Response `200`:**
 
-**Response 200:**
-
+```json
 {
   "event": { "event_id": 1, "title": "Great Hall", "radius_meters": 100 },
   "owner": {
@@ -1130,18 +796,20 @@ Zone detail with the current owner and the recent scoreboard of challengers. Res
     { "user_id": 6, "name": "Bob",   "points":  80 }
   ]
 }
+```
 
-owner is null if no player has been active in the window.
+*`owner` is `null` if no player has been active in the window.*
 
-Errors: 401, 404 (event not found).
+* **Errors:** `401`, `404` (event not found)
 
-###GET /api/zones/mine
+### `GET /api/zones/mine`
 
 Which zones the caller currently owns, plus their zone-count.
 
-**Auth required:** Yes.
+* **Auth required:** Yes
+* **Response `200`:**
 
-**Response 200:**
+```json
 {
   "zones": [
     { "event_id": 1, "event_title": "Great Hall", "score": 120, "updated_at": "…" }
@@ -1149,28 +817,305 @@ Which zones the caller currently owns, plus their zone-count.
   "zone_count": 1,
   "bonus_awarded_today": 0
 }
+```
 
-Calling this endpoint triggers a lazy check for the daily zone ownership stipend (see below). bonus_awarded_today is the number of points awarded during this call — 0 if the player is not yet due the bonus.
+Calling this endpoint triggers a lazy check for the daily zone ownership stipend (see below). `bonus_awarded_today` is the number of points awarded during this call — `0` if the player is not yet due the bonus.
 
-##Defence Mechanic
+### Defence Mechanic
 
 The current owner gets a 20% score bonus. A challenger must beat the incumbent's stored score × 1.2 to take over the zone.
 
-Example: owner has cached score 100. Their effective defence threshold
-is 120. A challenger with 110 points does not take over; a challenger with 130 does.
+*Example:* Owner has a cached score of 100. Their effective defence threshold is 120. A challenger with 110 points does not take over; a challenger with 130 does.
 
-##Zone ownership stipend
+### Zone Ownership Stipend
 
-| Zones owned | Daily bonus |
-| 0 - 2 | 0 |
-| 3 - 4 | +50 points |
+| Zones Owned | Daily Bonus |
+| --- | --- |
+| 0 – 2 | 0 points |
+| 3 – 4 | +50 points |
 | 5+ | +150 points |
 
-Awarded at most once per calendar day per user, lazily when the user calls GET /api/zones/mine. No scheduled job — if the player never reads their zones, they never receive the bonus that day.
+Awarded at most once per calendar day per user, lazily when the user calls `GET /api/zones/mine`. No scheduled job — if the player never reads their zones, they never receive the bonus that day.
 
-The bonus is recorded as a ZONE_BONUS row in point_transactions.
+The bonus is recorded as a `ZONE_BONUS` row in `point_transactions`.
 
+---
 
+## Battles (WebSocket)
+
+**Mount:** `/ws/battle`
+
+**Routers:** `socket_router.js`, `battle_socket.js`
+
+Adamas2Aurum handles live multiplayer and NPC card battles over a persistent WebSocket connection.
+
+### Connection & Authentication
+
+* **Auth required:** Yes. Authentication relies on the same session cookie as the HTTP API. The connection will be rejected with an HTTP `401 Unauthorized` during the upgrade phase if the session is invalid or missing.
+* **Message Format:** All incoming and outgoing messages must be stringified JSON.
+* **Reconnection Window:** If a player disconnects during an active battle, they are placed in a timeout state. They have exactly 2 minutes (120,000 ms) to reconnect; otherwise, the match is marked as `ABANDONED`.
+
+### Client-to-Server Messages
+
+Clients interact with the battle server by sending JSON objects containing a `type` property.
+
+#### `join_lobby`
+
+Places the player in the matchmaking lobby, or gracefully reconnects them to an active/pending battle if one exists.
+
+* **Request:** `{ "type": "join_lobby" }`
+
+#### `challenge_player`
+
+Issues a pending PvP battle challenge to an available player in the lobby.
+
+* **Request:** `{ "type": "challenge_player", "target_user_id": 12 }`
+
+#### `accept_challenge`
+
+Accepts or declines an incoming PvP match request.
+
+* **Request:**
+
+```json
+{
+  "type": "accept_challenge",
+  "accept": true,
+  "challenger_id": 12
+}
+```
+
+#### `start_npc_battle`
+
+Bypasses the lobby and immediately provisions a battle against the CPU using a randomly generated deck.
+
+* **Request:** `{ "type": "start_npc_battle" }`
+
+#### `submit_deck`
+
+Commits the player's 5-card deck for an initialized battle.
+
+* **Request:**
+
+```json
+{
+  "type": "submit_deck",
+  "deck": [
+    { "card_id": 1 }, { "card_id": 2 }, { "card_id": 3 }, { "card_id": 4 }, { "card_id": 5 }
+  ]
+}
+```
+
+*(Note: Decks must contain exactly 5 valid cards)*
+
+#### `attack`
+
+Executes a combat turn. The turn is validated against the active player's state and card categories.
+
+* **Request:**
+
+```json
+{
+  "type": "attack",
+  "attacker_slot": 0,
+  "target_slot": 2,
+  "action": "ATTACK"
+}
+```
+
+*(Valid actions include `ATTACK`, `DEFEND`, `DODGE`, `BUFF`, `DEBUFF`, and `REVIVE`, depending on the card's category)*
+
+#### `forfeit`
+
+Forfeits an active battle, immediately awarding the win to the opponent.
+
+* **Request:** `{ "type": "forfeit" }`
+
+#### `ping`
+
+Keep-alive mechanism.
+
+* **Request:** `{ "type": "ping" }`
+
+### Server-to-Client Events
+
+The server pushes JSON payloads back to connected clients to update their state and respond to actions.
+
+#### `lobby_users`
+
+Broadcasts the list of currently online users resting in the lobby.
+
+**Response:**
+
+```json
+{
+  "type": "lobby_users",
+  "users": [
+    {
+      "user_id": 12,
+      "username": "Test Player",
+      "name": "Test Player"
+    }
+  ]
+}
+```
+
+#### `incoming_challenge`
+
+Notifies a user that they have been challenged to a PvP match.
+
+**Response:**
+
+```json
+{
+  "type": "incoming_challenge",
+  "from_user_id": 5,
+  "from_username": "ChallengerName"
+}
+```
+
+#### `reject_challenge`
+
+Notifies the challenger that their match request was declined or the opponent was busy.
+
+**Response:**
+
+```json
+{
+  "type": "reject_challenge",
+  "challenger_id": 5
+}
+```
+
+#### `battle_started`
+
+Indicates a match has been created and prompts clients to submit their decks. Includes `is_npc: true` if playing against the CPU, or the respective player IDs for PvP.
+
+**Response (PvP):**
+
+```json
+{
+  "type": "battle_started",
+  "battle_id": 42,
+  "player1_id": 5,
+  "player2_id": 12
+}
+```
+
+#### `deck_accepted`
+
+Confirms a successful deck submission while waiting for the opponent.
+
+**Response:**
+
+```json
+{
+  "type": "deck_accepted",
+  "battle_id": 42,
+  "message": "Deck saved. Waiting for opponent..."
+}
+```
+
+#### `state_update`
+
+Delivers the complete, synchronized state of the board. Sent upon reconnection or after both decks are submitted.
+
+**Response:**
+
+```json
+{
+  "type": "state_update",
+  "battle_id": 42,
+  "state": { 
+    /* large object that has information on the current state of the game */
+  }
+}
+```
+
+#### `turn_result`
+
+Delivers the combat log and math results of an executed turn. If the opponent is an NPC, their turn is calculated and included in `opponent_result` within the same payload.
+
+**Response:**
+
+```json
+{
+  "type": "turn_result",
+  "battle_id": 42,
+  "player_user_id": 5,
+  "winner": -1,
+  "state": { /* Updated board state */ },
+  "player_result": {
+    "action": "ATTACK",
+    "attacker_slot": 0,
+    "target_slot": 2,
+    "landed": true,
+    "damage": 25,
+    "target_health_after": 75
+  },
+  "opponent_result": null 
+}
+```
+
+*(Note: `winner` returns `-1` if the match is ongoing, or the `user_id` of the victor if the match has concluded).*
+
+#### `match_results`
+
+Signals the end of the battle (due to knockout, forfeit, or abandonment).
+
+**Response:**
+
+```json
+{
+  "type": "match_results",
+  "winner": 5
+}
+```
+
+*(Note: `winner` is `null` if the match was abandoned by both players).*
+
+#### `error`
+
+Sent if a request fails validation. Often includes a `reject_type` indicating which action failed.
+
+**Response:**
+
+```json
+{
+  "type": "error",
+  "reject_type": "attack",
+  "message": "Not your turn"
+}
+```
+
+#### `pong`
+
+Standard response to a client `ping`.
+
+**Response:**
+
+```json
+{ "type": "pong" }
+```
+
+---
+
+## System / Miscellaneous
+
+### `GET /api/health`
+
+Health check endpoint to confirm DB connectivity.
+
+* **Auth required:** No
+* **Response `200`:** `{ "success": true, "tables": [...] }`
+
+### `GET /api/me`
+
+Top-level convenience endpoint that mirrors `GET /api/auth/me`. Returns the currently authenticated user.
+
+* **Auth required:** Yes
+
+---
 
 ## External Integrations
 
