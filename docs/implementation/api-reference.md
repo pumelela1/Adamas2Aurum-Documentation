@@ -955,6 +955,223 @@ Standard response to a client `ping`.
 
 ---
 
+---
+
+## Trades
+
+Card-for-card swaps between two players. Mounted at `/api/trades`. All
+endpoints require a session.
+
+### Trade object
+
+Every trade returned by the endpoints below has the same shape:
+
+```json
+{
+  "trade_id": 123,
+  "initiator_id": 1,
+  "receiver_id": 2,
+  "initiator_card_id": 10,
+  "receiver_card_id": 42,
+  "status": "PENDING",
+  "created_at": "2026-09-21T14:00:00.000Z",
+  "resolved_at": null,
+  "initiator": { "user_id": 1, "name": "Alice", "avatar_url": null },
+  "receiver":  { "user_id": 2, "name": "Bob",   "avatar_url": null },
+  "initiator_card": {
+    "card_id": 10, "name": "Barney Barnato",
+    "rarity": "RARE", "category": "CHARACTER", "image_url": "…"
+  },
+  "receiver_card": {
+    "card_id": 42, "name": "Wits Great Hall",
+    "rarity": "UNCOMMON", "category": "LOCATION", "image_url": "…"
+  }
+}
+status is one of PENDING, ACCEPTED, DECLINED, CANCELLED
+
+### 'POST /api/trades'
+Create a new trade offer. The caller is the initiator.
+
+**Auth required:** Yes.
+
+###Body:
+{
+  "receiver_id": 2,
+  "initiator_card_id": 10,
+  "receiver_card_id": 42
+}
+
+**Response 200:** the newly created trade object (see above).
+
+**Errors:**
+
+400 — missing fields, trading with yourself, either party doesn't own their offered card, or the card rarities are too asymmetric
+
+403 — one or both accounts are under 1 hour old
+
+429 — initiator has hit the daily trade cap (5 per 24h)
+
+##GET /api/trades/incoming
+
+Offers where the caller is the receiver, still PENDING.
+
+**Auth required:** Yes.
+
+**Response 200:** array of trade objects, newest first.
+
+##GET /api/trades/outgoing
+
+Offers the caller has made, in any status.
+
+**Auth required:** Yes.
+
+**Response 200:** array of trade objects, newest first.
+
+##POST /api/trades/:id/accept
+
+Atomically execute the swap. This is the only endpoint that moves
+cards.
+
+**Auth required:** Yes. Only the receiver may call this.
+
+**Response 200:** the trade object with status: "ACCEPTED".
+
+**Errors:**
+
+404 — trade not found
+
+403 — caller is not the receiver
+
+409 — trade is no longer PENDING, or one party no longer owns
+their offered card
+
+##POST /api/trades/:id/decline
+
+Receiver declines a pending trade. Does not touch cards.
+
+**Auth required:** Yes. Only the receiver may call this.
+
+**Response 200:** { "message": "Trade declined" }
+
+**Errors:** 403, 404, 409.
+
+##POST /api/trades/:id/cancel
+
+Initiator withdraws their own pending offer. Does not touch cards.
+
+**Auth required:** Yes. Only the initiator may call this.
+
+**Response 200:** { "message": "Trade cancelled" }
+
+**Errors:** 403, 404, 409.
+
+##Anti-abuse rules
+All rules are checked at create time, so the receiver never sees an
+offer that would fail on accept:
+
+| Rule | Threshold |
+| --- | --- |
+| `Daily cap` | Max 5 completed trades per user per rolling 24h |
+| `Daily cap` | abs(rarity_value(int) - rarity_value(recv)) <= 20 |
+| `Account age` | Both accounts must be at least 1 hour old |
+
+Rarity values are defined in utils/rarity_points.js (COMMON=5, cUNCOMMON=10, RARE=20, EPIC=40, LEGENDARY=80).
+
+##Zones
+
+Territory control. Each event is a "zone", and its owner is the player
+who has accumulated the most points from that event's trivia
+challenges over the last 24 hours. Ownership is resolved at read time
+by a deterministic function, no background jobs.
+
+Mounted at /api/zones.
+
+##Zone object
+
+{
+  "event_id": 1,
+  "event_title": "Great Hall",
+  "owner_id": 5,
+  "owner_name": "Alice",
+  "score": 120,
+  "updated_at": "2026-09-21T15:00:00.000Z"
+}
+
+###Get /api/zones
+
+List every zone that currently has an owner.
+
+**Auth required:** No — public read (matches the leaderboard).
+
+**Response 200:** array of zone objects, ordered by most recently
+updated first.
+
+###GET /api/zones/:eventId
+
+Zone detail with the current owner and the recent scoreboard of challengers. Resolves the owner fresh on every call, so the response is always the current truth.
+
+**Auth required:** Yes.
+
+**Response 200:**
+
+{
+  "event": { "event_id": 1, "title": "Great Hall", "radius_meters": 100 },
+  "owner": {
+    "user_id": 5,
+    "name": "Alice",
+    "score": 120
+  },
+  "previous_owner_id": null,
+  "owner_changed": true,
+  "window_hours": 24,
+  "defence_bonus": 1.2,
+  "scoreboard": [
+    { "user_id": 5, "name": "Alice", "points": 120 },
+    { "user_id": 6, "name": "Bob",   "points":  80 }
+  ]
+}
+
+owner is null if no player has been active in the window.
+
+Errors: 401, 404 (event not found).
+
+###GET /api/zones/mine
+
+Which zones the caller currently owns, plus their zone-count.
+
+**Auth required:** Yes.
+
+**Response 200:**
+{
+  "zones": [
+    { "event_id": 1, "event_title": "Great Hall", "score": 120, "updated_at": "…" }
+  ],
+  "zone_count": 1,
+  "bonus_awarded_today": 0
+}
+
+Calling this endpoint triggers a lazy check for the daily zone ownership stipend (see below). bonus_awarded_today is the number of points awarded during this call — 0 if the player is not yet due the bonus.
+
+##Defence Mechanic
+
+The current owner gets a 20% score bonus. A challenger must beat the incumbent's stored score × 1.2 to take over the zone.
+
+Example: owner has cached score 100. Their effective defence threshold
+is 120. A challenger with 110 points does not take over; a challenger with 130 does.
+
+##Zone ownership stipend
+
+| Zones owned | Daily bonus |
+| 0 - 2 | 0 |
+| 3 - 4 | +50 points |
+| 5+ | +150 points |
+
+Awarded at most once per calendar day per user, lazily when the user calls GET /api/zones/mine. No scheduled job — if the player never reads their zones, they never receive the bonus that day.
+
+The bonus is recorded as a ZONE_BONUS row in point_transactions.
+
+
+
 ## External Integrations
 
 * **OpenStreetMap Tile Server:** Client-side map tiles used by Leaflet. Loaded directly from `tile.openstreetmap.org` in the frontend; this is not proxied through the backend.
