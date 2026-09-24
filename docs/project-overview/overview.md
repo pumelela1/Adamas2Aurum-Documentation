@@ -62,7 +62,7 @@ Adamas to Aurum is for **everyone on the Wits campus**: students, staff, and vis
 
 Adamas to Aurum is a **web application**. It runs in the browser on any phone, tablet, or computer with location access, so there is nothing to download or install. The game is designed primarily for mobile play, since players are walking around campus while they play.
 
-For a full breakdown of the technologies used, see the [Tech Stack](./tech-stack.md) page. For a detailed list of what the game can do, see the [Features](./features.md) page.
+For a full breakdown of the technologies used, see the [Tech Stack](./technology-stack.md) page. For a detailed list of what the game can do, see the [Features](./features.md) page.
 
 ---
 
