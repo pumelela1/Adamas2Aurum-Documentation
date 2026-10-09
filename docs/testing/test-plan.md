@@ -29,7 +29,7 @@ This is the authoritative test strategy for **Adamas2Aurum**. It supersedes the 
 | Jest 29 + `--experimental-vm-modules` | Runner, ESM native | `package.json:6` `jest 29.7.0` |
 | `jest-environment-jsdom` | `document`/`window` for frontend | `29.7.0` |
 | `jest-coverage-badges` | SVG badges from `coverage-summary.json` | `1.1.2` |
-| Gitea Actions | CI | `.gitea/workflows/ci.yml` Node 20 |
+| Gitea Actions | CI | `.gitea/workflows/coverage.yml` Node 20 |
 
 Split via `package.json:13` `jest.projects` (`frontend` → `jsdom`, `backend` → `node`, both `**/*.test.js`).
 
@@ -47,9 +47,9 @@ Split via `package.json:13` `jest.projects` (`frontend` → `jsdom`, `backend` �
 }
 ```
 
-- `collectCoverageFrom` covers `app/src/**/*.js` excluding `*.test.js` and `node_modules` (per-project). This yields **All 83.43%** today; `backend/routes 80.31%`, `frontend/js 91.05%` (see `coverage/coverage-summary.json`).
+- `collectCoverageFrom` covers `app/src/**/*.js` excluding `*.test.js` and `node_modules` (per-project). This yields **All 86.93%** today; `backend/routes 86.78%`, `frontend/js 84.28%` (see `coverage/coverage-summary.json`).
 - `coverageReporters` `json` + `lcov` satisfy rubric; `json-summary` feeds `jest-coverage-badges`, `text` prints table in CI.
-- `coverageThreshold 70%` **fails the pipeline** (`npm run test:ci` exits 1) — enforced in `ci.yml:32`.
+- `coverageThreshold 70%` **fails the pipeline** (`npm run test:ci` exits 1) — enforced in `coverage.yml:32`.
 
 ## Strategy & Mocking
 
@@ -62,7 +62,7 @@ Split via `package.json:13` `jest.projects` (`frontend` → `jsdom`, `backend` �
 
 ### Every PR and push
 
-Workflow `.gitea/workflows/ci.yml` (Node 20) on `push: [main,dev]` and `pull_request: [main]`:
+Workflow `.gitea/workflows/coverage.yml` (Node 20) on `pull_request: [main,dev]` (renamed from `ci.yml` on 18 Sep 2026):
 
 1. `npm ci` (root) + `npm ci --prefix app/src/backend`
 2. `npm run test:ci` (`--ci --coverage`) — id `tests`, `continue-on-error: true` so badges still generate
@@ -82,16 +82,16 @@ Tests live next to code (`*.test.js`). Feature diff and test diff are reviewed t
 
 `npm run test:coverage` locally prints table. Badge SVGs committed to `badges/` render in `README.md` (relative paths) on Gitea without Codecov/Coveralls, per constraint `No external services`.
 
-## Results (14 Sep 2026)
+## Results (9 Oct 2026)
 
 ```
-Test Suites: 19 passed
-Tests:       207 passed
-All files    83.43% stmts / 72.96% branches / 90.5% funcs / 83.77% lines
-backend/routes 80.31%   frontend/js 91.05%
+Test Suites: 55 passed
+Tests:       765 passed
+All files    85.63% stmts / 77.58% branches / 87.75% funcs / 86.93% lines
+backend/routes 86.78%   frontend/js 84.28%
 ```
 
-Threshold 70% met. See `testing/test-cases.md` for per-suite catalogue.
+Threshold 70% met. Notable Sprint 4 additions: analytics 96.61% lines, moderation 98.42%, trust_score service 92.30% (functions 100%). See `testing/test-cases.md` for the per-suite catalogue.
 
 ## Gaps Closed Since Sprint 2 Draft
 

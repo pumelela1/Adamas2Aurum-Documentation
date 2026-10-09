@@ -33,7 +33,7 @@ Atomic, working state, no `wip`.
 `feat/* → dev` (or `dev → main` at milestone). Must have:
 
 1. One peer approval
-2. Pass CI (`test.yml` + `ci.yml` + `format-check.yml`)
+2. Pass CI (`test.yml` + `coverage.yml` + `format-check.yml`)
 3. Verified description
 4. Linked issue `Closes #N`
 

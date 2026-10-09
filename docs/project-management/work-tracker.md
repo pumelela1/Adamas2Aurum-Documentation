@@ -17,7 +17,7 @@ Tool: **Taiga** Kanban (`https://taiga.sdp.ms.wits.ac.za/project/adamas2aurum`, 
 | Backlog | 28 | US3-06 Procedural placement (5), US3-04 Trust engine (5) |
 | In Progress | 6 | Sprint 3 docs, `frontend-deploy.yml` secrets |
 | In Review | 12 | PR #12 `feat/curation-workflow`, PR #13 `feat/ci-badges` |
-| Done | 46 | US-01…US2-10, curation, `ci.yml` 83.4% |
+| Done | 46 | US-01…US2-10, curation, `coverage.yml` 83.4% |
 
 *Total 92 cards; 46 Done Sprint 1–3, 12 in Done Sprint 3 alone (`product-backlog.md`).*
 

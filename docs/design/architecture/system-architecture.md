@@ -68,8 +68,8 @@ Retire path: `POST /:id/retire` → `RETIRED ∧ is_active=FALSE`; insights `GET
 
 ## 5. Deployment Mapping
 
-- **Render** (backend), **Cloudflare Pages** (frontend static), **Aiven** (MySQL) — see `deployment/deployment.md`.
-- Gitea Actions runners: `test.yml` (unit), `ci.yml` (coverage + badges + artifact, Node 20), `format-check.yml` (Prettier). See `deployment/ci.md`.
+- **Render** (backend), **Cloudflare Workers static hosting** (frontend, `website.adamas2aurum.workers.dev`), **Aiven** (MySQL) — see `deployment/deployment.md`.
+- Gitea Actions runners: `test.yml` (unit), `coverage.yml` (coverage + badges + artifact, Node 20), `format-check.yml` (Prettier). See `deployment/ci.md`.
 
 ## 6. Non-Functional Fulfilment
 

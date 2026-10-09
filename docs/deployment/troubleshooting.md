@@ -23,8 +23,8 @@ Consolidated from `configuration.md`, `deployment.md:174`, and Sprint 2 meeting 
 | Symptom | Fix |
 |---------|-----|
 | Render deploy fails, `BETTER_AUTH_URL` not set | Set `BETTER_AUTH_URL` to Render-assigned URL after first deploy, plus `GOOGLE_CLIENT_ID/SECRET`, `SESSION_SECRET` |
-| Cloudflare Pages shows stale frontend | Check `frontend-deploy.yml` secrets `CLOUDFLARE_API_TOKEN/ACCOUNT_ID` and branch `main` only |
-| Gitea badges not updating | `ci.yml` commit uses `[skip ci]` — loop prevented; check `badges/` commit by `gitea-actions`; Shields.io may be throttled (retry) |
+| Cloudflare frontend shows stale build | Check `frontend-deploy.yml` secrets `CLOUDFLARE_API_TOKEN/ACCOUNT_ID` and branch `main` only |
+| Gitea badges not updating | `coverage.yml` commit uses `[skip ci]` — loop prevented; check `badges/` commit by `gitea-actions`; Shields.io may be throttled (retry) |
 | Coverage artifact empty | Ensure `coverage/lcov-report/` exists after `npm run test:ci` (reporters `json,lcov,json-summary` in `package.json:38`) |
 | Format check fails | `npm run format` locally, commit, push — `format-check.yml` runs `prettier --check .` |
 | GitHub mirror stale | `git fetch -p origin && git push --mirror github` (see `implementation/backend.md`) |
@@ -32,7 +32,7 @@ Consolidated from `configuration.md`, `deployment.md:174`, and Sprint 2 meeting 
 ## Logs to Check
 
 - Backend startup: `Executing 30 queries … successfully executed!` + `SHOW TABLES` if `LOG_DB=true`.
-- Gitea Actions: `ci.yml` steps `Run Tests with Coverage` (id `tests`, `continue-on-error: true`), `Generate Coverage Badges`, `Upload Coverage Report`.
+- Gitea Actions: `coverage.yml` steps `Run Tests with Coverage` (id `tests`, `continue-on-error: true`), `Generate Coverage Badges`, `Upload Coverage Report`.
 - Browser: Network tab for `401/403` on `/api/events?all=true` → role gate; `403 PUBLISHED` → curation gate.
 
 If issue persists, open a Gitea issue with label `bug` and attach `coverage/coverage-summary.json` + `git log --oneline -5`.

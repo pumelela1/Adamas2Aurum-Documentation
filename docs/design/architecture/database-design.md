@@ -290,3 +290,25 @@ classDiagram
     Season "1" -- "0..*" LeaderboardEntry : tracks
     Cosmetic "1" -- "0..*" UserCosmetic : owned
 ```
+---
+
+## Performance Indexes
+
+Secondary indexes are **not** declared in `schema.sql`: a bare `CREATE INDEX`
+is not re-runnable and would abort the idempotent schema script on every boot.
+Instead, `ensure_performance_indexes()` in `app/src/backend/server.js` creates
+them at startup and ignores MySQL error `1061 (ER_DUP_KEYNAME)` when they
+already exist — the same idempotent-migration pattern the project uses for
+the curation and movement-trust columns. `schema.sql` documents the list in a
+comment block at the end of the file.
+
+| Index | Table (columns) | Speeds up |
+|-------|-----------------|-----------|
+| `idx_events_lat_lng` | `events (latitude, longitude)` | Geo/proximity scans over event stops (`GET /api/events`, placement checks) |
+| `idx_events_active_window` | `events (is_active, starts_at, ends_at)` | "Active now" filtering and the stale-event analytics sweep |
+| `idx_ta_user_event` | `trivia_attempts (user_id, event_id)` | Per-player attempt lookups: cooldowns, `max_attempts_per_window`, engagement analytics |
+| `idx_lcl_user_checked` | `location_check_log (user_id, checked_at)` | Movement-trust history reads and moderation evidence queries |
+
+All primary/foreign keys are already indexed by InnoDB (primary keys as
+clustered indexes, FKs as secondary indexes), so the list above only covers
+the hot query patterns that key-only indexes miss.

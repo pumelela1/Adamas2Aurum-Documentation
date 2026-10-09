@@ -35,7 +35,7 @@ gantt
 |-----------|------|-------------|----------|
 | M1 Sprint 1 | 23 Aug | Auth, map, events, trivia, cards, battle | `implementation/*`, `test-cases.md` 10 tests |
 | M2 Sprint 2 | 13 Sep | Offline, QR, async PvP, leaderboard, rarity | `api-reference.md` 500+ lines, `sync.test.js` |
-| M3 Sprint 3 | 3 Oct  | Curation + campaigns + analytics + `ci.yml` 83.4% | `implementation/curation.md`, `badges/` |
+| M3 Sprint 3 | 3 Oct  | Curation + campaigns + analytics + `coverage.yml` 83.4% | `implementation/curation.md`, `badges/` |
 | M4 Submission | 23 Oct | Docs site, deployment, reports | This site, `deployment/ci.md` |
 
 ## Methodology — Scrum (motivated)
@@ -51,7 +51,7 @@ Cadence: Mon planning, Wed standup, Fri review/retro; Taiga `To Do → In Progre
 | Aiven shared DB wipe (`SEED_DB=true` dev) | High | `SEED_DB=false` default, `initialize_database()` idempotent, chat warning before `db:seed` (`deployment/configuration.md:112`) | Sibusiso |
 | Gitea outage (SSO) | High | GitHub mirror (`implementation/backend.md` Render) | Busisiwe |
 | GPS spoof/fake timing | High | Server-timed `trivia_issue.issued_at`, `distance_meters` gate, `offline_trivia_queue` deferred check | Samukelo |
-| Coverage drop below 70% | Medium | `package.json:44` threshold fails `ci.yml` (`test:ci --coverage`) | Banele |
+| Coverage drop below 70% | Medium | `package.json:44` threshold fails `coverage.yml` (`test:ci --coverage`) | Banele |
 | Scope creep US2-10/US3 | Medium | Split curation to 4 sub-stories (8+5+3+2 pts) in `product-backlog.md` | Team |
 | Map style rejected (“ugly”) | Low | Carto Voyager PoGO palette, `campus-style.js` single truth | Busisiwe |
 

@@ -6,7 +6,7 @@ sidebar_position: 8
 
 > **Sprint 3** — stakeholder feedback: “Authoring should become curation. Content should be drafted, reviewed, and published rather than going live as written, campaigns scheduled around a term or an open day, old events retired, and questions everybody gets wrong surfaced so they can be repaired.”
 
-This replaces the old “goes live as written” model (`is_active` only). See `docs/curation.md` in app and `.gitea/workflows/ci.yml`.
+This replaces the old “goes live as written” model (`is_active` only). See `docs/curation.md` in app and `.gitea/workflows/coverage.yml`.
 
 ## 1. State Machine
 

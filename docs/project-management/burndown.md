@@ -40,7 +40,7 @@ xychart-beta
   line [28, 18, 3, 1, 0]
 ```
 
-- 08 Sep curation schema + `TRANSITIONS` (28→18), 10 Sep campaigns+analytics (18→3), 14 Sep `ci.yml` + 83.4% badges + `curation.md` docs (3→1), 20 Sep `burndown.md` itself (1→0). Docs were WIP until now.
+- 08 Sep curation schema + `TRANSITIONS` (28→18), 10 Sep campaigns+analytics (18→3), 14 Sep `ci.yml` (now `coverage.yml`) + 83.4% badges + `curation.md` docs (3→1), 20 Sep `burndown.md` itself (1→0). Docs were WIP until now.
 
 ## Cumulative (Sprints 1–2)
 

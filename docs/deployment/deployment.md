@@ -186,9 +186,9 @@ $ npm run start:frontend
 
 ## Remote Deployment
 
-### Frontend (Cloudflare Pages)
+### Frontend (Cloudflare Workers static hosting)
 
-Deployed automatically via `.gitea/workflows/frontend-deploy.yml` on push to `main`. Requires secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` (Gitea repo settings). The workflow runs `npx wrangler deploy --assets=./app/src/frontend --name website`.
+Deployed automatically via `.gitea/workflows/frontend-deploy.yml` on push to `main` at **`https://website.adamas2aurum.workers.dev`**. Requires secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` (Gitea repo settings). The workflow swaps `localhost` API references for the Render backend URL, then runs `npx wrangler deploy --assets=./app/src/frontend --name website`.
 
 No manual action except not pushing broken code to `main`.
 
@@ -214,8 +214,8 @@ No deploy step — backend `initialize_database()` runs `CREATE TABLE IF NOT EXI
 
 ### CI/CD (Gitea Actions)
 
-- `test.yml` — unit tests on push/PR `dev,main`.
-- `ci.yml` — Node 20, `npm ci`, `npm run test:ci` (`--ci --coverage` with 70% threshold), `jest-coverage-badges` → `badges/`, Shields `badge-tests.svg`, `git commit [skip ci]` + push as `gitea-actions`, artifact `coverage-report` 14d, final `exit 1` if `steps.tests.outcome==failure`.
+- `test.yml` — unit tests on PR `dev,main`.
+- `coverage.yml` — Node 20, `npm ci`, `npm run test:ci` (`--ci --coverage` with 70% threshold), `jest-coverage-badges` → `badges/`, Shields `badge-tests.svg`, `git commit [skip ci]` + push as `gitea-actions`, artifact `coverage-report` 14d, final `exit 1` if `steps.tests.outcome==failure`.
 - `format-check.yml` — Prettier. See `deployment/ci.md`.
 
 ### Database

@@ -17,7 +17,7 @@ Source of truth: **Taiga** Kanban `Adamas2Aurum` (epics → user stories → tas
 | **Curation (Sprint 3)** | US2-10 / Sprint 3 curation brief | Must | **Done Sep 2026** — `events.curation_status`, `campaigns`, `analytics` |
 | **Realtime & Social** | US2-05 Async PvP, US3-01 Live sync, US3-09 Trading, US2-07 Leaderboard | Should | Done (async), Leaderboard done, Trading/Season schema ready |
 | **Trust & Offline** | US2-01..04 Offline, movement check, QR, US3-04 Fraud score | Should | Done |
-| **Tooling** | CI, coverage, docs | Must | Done — `ci.yml`, `badges/`, `threshold 70%` |
+| **Tooling** | CI, coverage, docs | Must | Done — `coverage.yml`, `badges/`, `threshold 70%` |
 
 ## Detailed Backlog (Taiga export, top 20)
 
@@ -50,7 +50,7 @@ Source of truth: **Taiga** Kanban `Adamas2Aurum` (epics → user stories → tas
 
 - **Sprint 1 (2–23 Aug):** US-01…US-10 (auth, map, trivia, cards, battle).
 - **Sprint 2 (24 Aug–13 Sep):** US2-01…US2-10 (offline, QR, PvP, leaderboard, rarity, trails, curation kickoff).
-- **Sprint 3 (14 Sep–23 Oct):** Curation workflow + campaigns + analytics + `ci.yml` 83.4% + docs (this board). See `project-plan.md` Gantt.
+- **Sprint 3 (14 Sep–23 Oct):** Curation workflow + campaigns + analytics + `coverage.yml` 83.4% + docs (this board). See `project-plan.md` Gantt.
 
 ## Refinement
 

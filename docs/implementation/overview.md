@@ -17,7 +17,7 @@ This section is the implementation truth for **Adamas2Aurum**. Every subsection 
 | [Database](database.md) | 23 tables, lifecycle, seeds | `db/schema.sql`, `db/seed.sql` |
 | [Game Systems](game-systems.md) | Card award, rarity, selling, battle, trading, points | `routes/cards.js:308`, `routes/event_pool.js` |
 | [API Reference](api-reference.md) | Full external REST + WebSocket | All `routes/*.js` |
-| [Database Deployment](../deployment/deployment.md) | Render ↔ Gitea mirror, Cloudflare, Aiven | `.gitea/workflows/ci.yml` |
+| [Database Deployment](../deployment/deployment.md) | Render ↔ Gitea mirror, Cloudflare, Aiven | `.gitea/workflows/coverage.yml` |
 
 ## How to Navigate
 

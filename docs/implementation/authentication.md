@@ -229,6 +229,25 @@ sequenceDiagram
 | **Password update** | Handled by Better Auth |
 | **Successful reset** | User is redirected to `/` |
 
+### 7.3 PIN Reset (username + PIN accounts)
+
+Alongside the Better Auth email flow, the project's **username + PIN**
+accounts (custom routes in `app/src/backend/routes/auth.js`) implement the
+brief's password-reset requirement with the same token pattern:
+
+| Aspect | Implementation |
+|---|---|
+| **Request** | `POST /api/auth/forgot-pin` with the account email/username |
+| **Response** | Generic `200` message (no user enumeration); the response carries `reset_token` + `expires_in_s: 900` so the flow is demonstrable without SMTP — production would email the token |
+| **Token** | 64-hex `crypto.randomBytes(32)`, single-use, 15-minute expiry |
+| **Storage** | In-memory `pinResetTokens` map per backend instance (a `password_resets` table would be needed for multi-instance deployments) |
+| **Google accounts** | `400` — they have no PIN to reset |
+| **Consumption** | `POST /api/auth/reset-pin` with `email` + `token` + `new_pin` (4–6 digits); validates, re-hashes via `hashPin`, deletes the token |
+| **Signed-in change** | `POST /api/auth/change-pin` (session + current PIN) |
+
+Covered by `routes/auth-reset.test.js` (missing email, unknown user, Google
+account, full issue→consume→replay flow, invalid PIN/token, expiry).
+
 ---
 
 ## 8. Account Deletion
@@ -396,7 +415,22 @@ The client entry point creates the Better Auth client using the application's cu
 
 ## 14. Testing and Verification
 
+Authentication is covered by two Jest suites that run in CI
+(`coverage.yml`, see `testing/test-plan.md`):
 
+| Suite | Covers |
+|---|---|
+| `app/src/backend/routes/auth.test.js` | `POST /login` 400/401 not-found/401 wrong-PIN/200 + roles, `POST /register` 400/400 exists/201, `GET /me` 401/200, `POST /logout` 200 |
+| `app/src/backend/routes/auth-reset.test.js` | forgot-pin 400/anti-enumeration/Google-account, reset-pin full token flow (issue → consume → replay-rejected), invalid PIN/token, expiry |
+
+Both suites mock the DB pool at the module boundary and drive the router
+through an ephemeral Express + `http.createServer` + `fetch` harness, so
+routing, middleware and body parsing are exercised end-to-end. The
+`routes/auth.js` module sits above 90% line coverage in the combined run.
+
+Manual verification: sign in / sign up through the auth drawer on
+`http://localhost:3000`, Google sign-in round-trip, forgot-PIN flow from the
+drawer's *Forgot PIN?* disclosure.
 
 ## 15. Authentication Summary
 

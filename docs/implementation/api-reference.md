@@ -3,7 +3,7 @@
 Adamas2Aurum exposes a single HTTP API served by a Node.js/Express backend. Every endpoint returns JSON. Requests are authenticated with a session cookie set by the login endpoints (or by Better Auth's Google flow); there is no bearer token or API key mechanism.
 
 * **Base URL (local development):** `http://localhost:3000/api`
-* **Production URL:** *Not yet deployed. This document describes the contract; deployment to a public host is tracked separately.*
+* **Production URL:** `https://adamas2aurum.onrender.com/api` (Render, auto-deploys from `dev` via GitHub mirror). Health: `GET /api/health`. Frontend: `https://website.adamas2aurum.workers.dev` (Cloudflare Workers static hosting, deployed by `frontend-deploy.yml`). See `deployment/overview.md`.
 
 ## API Conventions
 
@@ -92,6 +92,36 @@ Clear the session cookie.
 
 * **Auth required:** Yes
 * **Response `200`:** `{ "message": "Logged out" }`
+
+### `POST /api/auth/change-pin`
+
+Change PIN for username + PIN accounts (requires session + current PIN).
+
+* **Auth required:** Yes
+* **Errors:** `400` (missing fields, invalid new PIN, Google account), `401` (wrong current PIN)
+
+### `POST /api/auth/forgot-pin`
+
+Request a PIN-reset token (password-reset requirement). Always returns 200 with a generic message to avoid user enumeration; includes `reset_token` in the response so the flow is demonstrable without SMTP (production would email it). Token is single-use, 15-minute expiry, in-memory per backend instance.
+
+* **Auth required:** No
+* **Errors:** `400` (missing email, Google account has no PIN)
+* **Response `200`:** `{ "message": "If that username exists, a reset token was created.", "reset_token": "<64-hex>", "expires_in_s": 900 }`
+
+### `POST /api/auth/reset-pin`
+
+Consume a reset token and set a new PIN.
+
+* **Auth required:** No
+* **Errors:** `400` (missing fields, invalid PIN, invalid/expired token)
+* **Response `200`:** `{ "message": "PIN has been reset — you can now log in." }`
+
+### `DELETE /api/auth/account`
+
+Delete own account (requires `confirmation: "DELETE"`). Removes PIN hash, roles, terms record and anonymises the `users` row.
+
+* **Auth required:** Yes
+* **Errors:** `400` (missing confirmation)
 
 ### Better Auth (OAuth) Endpoints
 

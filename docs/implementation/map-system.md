@@ -72,6 +72,17 @@ Street-level lock `zoom 17–20`, `pitch 55–70°`, PoGO follow, `dragstart` �
 - `npm run format:check` — Prettier `test:coverage` 100%.
 - Manual: `http://localhost:3000` vs `pages/events.html`, on/off-campus, drag/recenter, night at 20:00 (`body.night`).
 
+## External API Integration (Rubric §2.1)
+
+Two relevant external services are integrated cohesively, not bolted on:
+
+| Service | Use | Files |
+|---|---|---|
+| **CartoDB Voyager vector tiles + MapLibre GL CDN** | Live world basemap (whole-world OSM vector tiles, restyled to PoGO palette). Gameplay markers never live in tiles. | `js/campus-style.js:45,75`, `index.html:13-16` |
+| **Google OAuth 2.0 via Better Auth** | Alternate sign-in; `callbackURL` returns to map | `js/auth-client.js:googleSignIn`, `backend/src/auth.js` |
+
+**Why not Google Maps / Street View:** Meeting 1 requested Street View, but Google Maps JS + Street View requires a billed API key per deployment, cannot be extruded to a game palette, and labels/POIs cannot be stripped for a game feel (client feedback Sprint 2 Meeting 13: map felt like navigation, not a game). MapLibre + Carto is keyless, vector-restyleable, and supports 3D building extrusion for the PoGO look. Street View panoramas add no gameplay value — challenges gate on GPS proximity + QR fallback (`routes/qr.js`), not on imagery. Decision recorded here and in `technology-stack.md`; client accepted game-map direction in Sprint 2.
+
 ## Rubric Mapping
 
 - **Design → Architecture:** renderer choice, single style truth, bbox vs polygon trade-off.

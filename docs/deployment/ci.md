@@ -12,15 +12,16 @@ Workflows in `.gitea/workflows/`:
 
 | Workflow | Trigger | Node | Purpose |
 |----------|---------|------|---------|
-| `ci.yml` | `push: [main,dev]`, `pull_request: [main]` | 20 | Tests + coverage + badges + artifact, fails below 70% |
-| `test.yml` | `push`, `pull_request: [dev,main]` | 20 | Quick unit tests (`npm test`) |
-| `format-check.yml` | `push, pull_request: [main]` | 24 | `prettier --check .` |
+| `coverage.yml` | `pull_request: [main,dev]` | 20 | Tests + coverage + badges + artifact, fails below 70% |
+| `test.yml` | `pull_request: [main,dev]` | 20 | Quick unit tests (`npm test`) |
+| `format-check.yml` | `pull_request: [main,dev]` | 20 | `prettier --check .` |
+| `frontend-deploy.yml` | `push: [main]` | 20 | Swap localhost→Render URL + `wrangler deploy --assets` to Cloudflare Workers (`website.adamas2aurum.workers.dev`) |
 
-## `ci.yml` — Coverage Badges Pipeline
+## `coverage.yml` — Coverage Badges Pipeline (renamed from `ci.yml` on 18 Sep 2026)
 
 ```yaml
 jobs:
-  ci:
+  coverage-run:
     runs-on: ubuntu-latest
     steps:
       - Checkout (fetch-depth 0, token GITEA_TOKEN)

@@ -15,14 +15,39 @@ through our COMS modules, or through personal projects, so we saw it as the
 best fit given all our experiences. It is more admin and tedious, but it
 gives us less technology to have to learn in a semester.
 
-### [Leaflet.js](https://leafletjs.com/) + OpenStreetMap tiles for the interactive campus map
+### [MapLibre GL JS](https://maplibre.org/) + CartoDB Voyager vector tiles for the interactive campus map
 
-It is a simple library to use and doesn't require you to dedicate hours
-upon hours to get a basic working version.
+The campus map uses **MapLibre GL JS v3.6.2** (open-source, loaded via CDN,
+no API key) rendering **CartoDB Voyager vector tiles** — live OpenStreetMap
+data for the whole world, restyled in code to a Pokémon-GO-style game
+palette (green base, muted 3D building extrusion, no street-name/POI
+labels). All gameplay information (event stops, proximity circles, the
+player avatar) lives on markers layered above the tiles, never in them.
+The full architecture is documented in
+[`implementation/map-system.md`](../implementation/map-system.md).
 
-We tried the Google Maps API, but the limits were too strict, which we
-feared would require us to either pay or find alternatives midway through
-the project.
+#### Why not Google Maps / Street View
+
+An early client meeting (Sprint 1, Meeting 1) requested Google Street View
+imagery. We deliberately moved away from the Google stack:
+
+- **Cost & keys:** Google Maps JS + Street View require a *billed* API key
+  per deployment with strict free-tier limits — a mid-project billing
+  surprise we could not justify for a student project. We briefly tried the
+  Google Maps API in Sprint 1 and stopped for exactly this reason.
+- **Not stylable:** Street View panoramas and Google raster tiles cannot be
+  re-styled into a game palette. Labels, POIs and navigation chrome cannot
+  be stripped, so the map "felt like navigation, not a game" (client
+  feedback, Sprint 2 Meeting 13).
+- **No gameplay value:** challenge attempts gate on GPS proximity (with a
+  QR fallback), never on imagery — panoramic photos would add cost without
+  adding a mechanic.
+
+MapLibre + CartoDB is keyless, vector-restyleable, and supports the 3D
+building extrusion the game look depends on. The client accepted the
+game-map direction in Sprint 2. This decision is also recorded in
+[`implementation/map-system.md`](../implementation/map-system.md) under
+*External API Integration*.
 
 ## Backend
 
@@ -142,8 +167,8 @@ range declared in each `package.json`.
 
 | Service / library                                           | Purpose                                                                                 |
 | ---                                                         | ---                                                                                     |
-| [OpenStreetMap](https://www.openstreetmap.org/) tile server | Base map tiles for the campus map. Loaded client-side from `tile.openstreetmap.org`     |
-| [Leaflet.js](https://leafletjs.com/)                        | Client-side map rendering - loaded via CDN                                              |
+| [CartoDB Voyager vector tiles](https://carto.com/basemaps)  | Basemap tiles (live worldwide OSM data) for the campus map, restyled client-side into the game palette. Loaded from Carto's basemaps CDN, no API key |
+| [MapLibre GL JS](https://maplibre.org/)                     | Client-side WebGL map rendering - loaded via CDN, no API key (replaced Leaflet/OSM raster tiles in Sprint 2; see map decision above) |
 | [Aiven](https://aiven.io/)                                  | Managed MySQL hosting for the shared development database (alternative to local Docker) |
 | [GitHub Pages](https://pages.github.com/)                   | Hosting for this documentation site                                                     |
-| [Cloudflare Pages](https://pages.cloudflare.com/)           | Hosting for the deployed frontend (see `.gitea/workflows/frontend-deploy.yml`)          |
+| [Cloudflare Workers static hosting](https://workers.cloudflare.com/) | Hosting for the deployed frontend via `wrangler deploy --assets` (`frontend-deploy.yml`) → `https://website.adamas2aurum.workers.dev` |

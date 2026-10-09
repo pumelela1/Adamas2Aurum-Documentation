@@ -28,7 +28,7 @@ Derived from the COMS3011A Wits Quest brief, stakeholder meetings ( Weeks 1–3 
 | NFR-01 | Performance: map first paint &lt;1.5s, API p95 &lt;200ms | &lt;200ms | `deployment/configuration.md` (pool 10, cache) |
 | NFR-02 | Reliability: no client can fake location/score | Server-graded | `routes/trivia.js:40` `isEventPlayable` |
 | NFR-03 | Test coverage ≥70% lines/branches/functions | ≥70% | `package.json:44` threshold, 83.4% achieved |
-| NFR-04 | CI must fail on threshold breach | exit 1 | `.gitea/workflows/ci.yml:76` |
+| NFR-04 | CI must fail on threshold breach | exit 1 | `.gitea/workflows/coverage.yml:79` |
 | NFR-05 | Badges committed, self-contained (no Codecov) | SVG in `badges/` | `badges/badge-*.svg` + README |
 | NFR-06 | Aesthetics & responsiveness | Wits palette, mobile header collapse | `css/style.css`, Lighthouse (see `deployment/performance.md` placeholder) |
 | NFR-07 | Documentation hosted, versioned | Docusaurus on GitHub Pages | `docusaurus.config.js` |

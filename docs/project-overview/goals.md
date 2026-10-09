@@ -57,7 +57,7 @@ These principles sit behind the goals above and guide design decisions:
 |-------------|------|------------------|
 | Students (players) | Fun, quick sessions between lectures | Bi-weekly play-tests (see `project-management/meetings.md`), UAT form Sprint 2 |
 | Authors / Wits Heritage staff | Curate without going live as written | Sprint 3 stakeholder review of `DRAFT→IN_REVIEW→PUBLISHED→RETIRED` workflow |
-| Course markers | Rubric Advanced on Milestones 1–4, 70% coverage, CI on Gitea | Evidence in `docs/testing/test-plan.md`, `.gitea/workflows/ci.yml` |
+| Course markers | Rubric Advanced on Milestones 1–4, 70% coverage, CI on Gitea | Evidence in `docs/testing/test-plan.md`, `.gitea/workflows/coverage.yml` |
 
 ## Constraints
 

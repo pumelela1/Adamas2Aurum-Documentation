@@ -29,7 +29,7 @@ No Codex, Copilot, or external SonarQube was used at runtime.
 - **AI did:** Scaffolding for `utils.test.js` (esc, buildCardBody), `events.test.js` (transition matrix), `campaigns.test.js`, `analytics.test.js`, `cards/questions/auth/pool` suites using the existing `jest.unstable_mockModule` + ephemeral `express` harness pattern (`leaderboard.test.js:22`).
 - **Human did:** Fixed `formatDT` Invalid Date expectation, `cards` rarity mock, `event_pool` weight 0→1 default, `auth` session shape (`req.session.user` vs `req.user`), added `response.test.js` for `utils/response.js`. Verified threshold 70% (`package.json:44`) locally `83.43%`.
 
-### 3. CI/CD — `package.json:69` `test:ci`/`badges`, `.gitea/workflows/ci.yml`
+### 3. CI/CD — `package.json:69` `test:ci`/`badges`, `.gitea/workflows/coverage.yml`
 
 - **AI did:** Proposed `jest --ci --coverage` + `jest-coverage-badges` + Shields curl with `continue-on-error` + `steps.tests.outcome`, `if: always()` commit `[skip ci]` as `gitea-actions`, artifact `coverage-report` 14d, `collectCoverageFrom` per-project.
 - **Human did:** Moved `collectCoverageFrom` from global `app/src/**/*.js` (0% bug) to per-project `**/*.js` (`package.json:14` fix after `All 0%` run), installed `jest-coverage-badges@1.1.2` at root (not backend), verified `coverage-summary.json` + `badges/badge-*.svg` generation, fixed `git push` branch var to plain `git push`.
