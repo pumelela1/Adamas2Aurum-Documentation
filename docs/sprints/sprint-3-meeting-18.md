@@ -14,7 +14,6 @@
 | ---      | ---     |
 | Banele   | Present |
 | Busisiwe | Present |
-| Jon      | Present |
 | Pumelela | Present |
 | Sibusiso | Present |
 | Samukelo | Present |
@@ -25,7 +24,7 @@
 
 ## 2. Progress Updates
 
-* **Jon:** Completed his assigned work and planned to focus on documentation.
+* **Banele:** Completed his assigned work and planned to focus on documentation.
 * **Pumelela and Busisiwe:** Completed their work but had not yet pushed their changes.
 * **Sibusiso:** Completed one user story and planned to continue working on the next one.
 * **Samukelo:** Completed both assigned user stories.

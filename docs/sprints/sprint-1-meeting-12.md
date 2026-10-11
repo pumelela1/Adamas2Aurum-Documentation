@@ -26,7 +26,7 @@ The Sprint 2 user stories were allocated as follows:
 | Team Member    | User Story                                                        |
 | -------------- | ----------------------------------------------------------------- |
 | **Busisiwe**   | **1. Offline Attempt Capture (Client-Side)**                      |
-| **Banele Jon** | **2. Offline Sync & Deferred Verification (Backend)**             |
+| **Banele** | **2. Offline Sync & Deferred Verification (Backend)**             |
 | **Pumelela**   | **3. Movement-Based Trust Check (Anti-Cheat v1)**                 |
 | **Samkelo**    | **4. Low-Accuracy Fallback Verification**                         |
 | **Sibusiso**   | **5. Asynchronous PvP (Challenge, Turn Exchange and Forfeiture)** |
@@ -41,7 +41,7 @@ The implementation should include:
 * Displaying a clear **"Saved, will sync"** state to the player.
 * Ensuring that queued attempts remain available after the application is restarted.
 
-### 2. Offline Sync & Deferred Verification (Backend) — Banele Jon
+### 2. Offline Sync & Deferred Verification (Backend) — Banele
 
 When a device reconnects, queued attempts must be verified based on the **time at which they were captured**, rather than the time at which they are synchronised.
 

@@ -26,7 +26,7 @@
 * Discussed sign-in using `better-auth` for third-party auth, alongside a webapp-based option (email and password).
 * Evaluated database architecture: having two separate tables (one for `better-auth` accounts and one for webapp-based sign-ins) versus a single table with a boolean field indicating authentication type.
 * Noted that UI design clarifications were addressed in the previous meeting's minutes.
-* Discussed Busisiwe retrieving player location via the Geolocation API and marking it on the map previously implemented by Jon as part of his user story.
+* Discussed Busisiwe retrieving player location via the Geolocation API and marking it on the map previously implemented by Banele as part of his user story.
 * **Git Policy Update:** Every member is now responsible for merging their own branches into `dev` and ensuring they do not break existing features.
 
 ---

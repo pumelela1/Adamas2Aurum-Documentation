@@ -14,7 +14,6 @@
 | ---      | ---     |
 | Banele   | Present |
 | Busisiwe | Present |
-| Jon      | Present |
 | Pumelela | Present |
 | Sibusiso | Present |
 | Samukelo | Present |
