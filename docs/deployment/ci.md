@@ -63,7 +63,3 @@ curl -s https://img.shields.io/badge/tests-passing-brightgreen -o badges/badge-t
 ```
 
 Self-contained — no third-party hosting beyond Shields fetch at generation time.
-
-## SonarQube Placeholder
-
-`sonar-project.properties` at repo root is a placeholder (`sonar.projectKey`, `sonar.javascript.lcov.reportPaths=coverage/lcov.info`). If SonarQube is added later, point `sonar.host.url`/`login` and run `npx sonar-scanner`.
