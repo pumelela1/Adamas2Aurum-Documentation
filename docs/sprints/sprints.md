@@ -26,6 +26,11 @@
   * [Meeting 16 (8 September 2026)](./sprint-2-meeting-16.md)
   * [Meeting 17 (13 September 2026)](./sprint-2-meeting-17.md)
 
+* [Sprint 3](#sprint-3)
+
+  * [Meeting 18 (22 September 2026)](./sprint-3-meeting-18.md)
+  * [Meeting 19 (29 September 2026)](./sprint-3-meeting-19.md)
+
 > Note: Sprints are usually written physically by whoever the note-taker is for the week. AI is then used to make the minutes taken in a rush more coherent and structured.
 
 ---
@@ -55,4 +60,13 @@
 * **Sprint 2 - Meeting 15 (6 September 2026)**: [View Minutes](./sprint-2-meeting-15.md)
 * **Sprint 2 - Meeting 16 (8 September 2026)**: [View Minutes](./sprint-2-meeting-16.md)
 * **Sprint 2 - Meeting 17 (13 September 2026)**: [View Minutes](./sprint-2-meeting-17.md)
+
+---
+
+## Sprint 3
+
+* **Sprint 3 - Meeting 18 (22 September 2026)**: [View Minutes](./sprint-3-meeting-18.md)
+* **Sprint 3 - Meeting 19 (29 September 2026)**: [View Minutes](./sprint-3-meeting-19.md)
+
+> Note: Meeting 19 (29 September 2026) was the final meeting held. The team decided not to hold any further meetings afterwards, as the remaining work consisted mainly of bug fixes and most of the planned work was already complete.
 

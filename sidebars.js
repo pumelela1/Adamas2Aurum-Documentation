@@ -62,6 +62,8 @@ const sidebars = {
 			'sprints/sprint-2-meeting-15',
             'sprints/sprint-2-meeting-16',
             'sprints/sprint-2-meeting-17',
+            'sprints/sprint-3-meeting-18',
+            'sprints/sprint-3-meeting-19',
           ],
 	},
       ],
