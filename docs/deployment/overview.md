@@ -8,14 +8,14 @@ Adamas2Aurum is deployed as a **split-origin** system (frontend and backend on d
 
 ## Deployment Targets
 
-| Component | Host | URL | Branch | How deployed |
-|-----------|------|-----|--------|--------------|
-| **Frontend** | Cloudflare Workers (static assets) | `https://website.adamas2aurum.workers.dev` | `main` | Gitea Action `frontend-deploy.yml` runs `npx wrangler deploy --assets=./app/src/frontend --name website` on push to `main` |
-| **Backend** | Render | `https://adamas2aurum.onrender.com` | `dev` (mirrored to GitHub) | Render watches GitHub mirror `Busisiwe-Mnguni/Adamas2Aurum-backend-deployment` (`dev`), auto-deploys on mirror sync |
-| **Database** | Aiven MySQL 8.4 | `aiven.io` managed (`a2adb`) | — | No deploy; `initialize_database()` runs `CREATE TABLE IF NOT EXISTS` + `ensure_curation_schema()` on every boot |
-| **Documentation** | GitHub Pages | `https://pumelela1.github.io/Adamas2Aurum-Documentation/` | `main` (docs repo) | GitHub Actions workflow `.github/workflows/main.yml` builds Docusaurus and deploys to Pages on push to `main` |
+| Component         | Host             | URL                                                                    | Branch                     | How deployed                                                                                                    |
+|-------------------|------------------|------------------------------------------------------------------------|----------------------------|-----------------------------------------------------------------------------------------------------------------|
+| **Frontend**      | Cloudflare Pages | `https://website.adamas2aurum.workers.dev` (via `frontend-deploy.yml`) | `main`                     | Gitea Action `frontend-deploy.yml` runs `npx wrangler deploy --assets=./app/src/frontend` on push to `main`     |
+| **Backend**       | Render           | `https://adamas2aurum.onrender.com`                                    | `dev` (mirrored to GitHub) | Render watches GitHub mirror `https://github.com/Sibu05/adamsgithub` (`main`), auto-deploys on mirror sync      |
+| **Database**      | Aiven MySQL      | `aiven.io` managed (`a2adb`)                                           | —                          | No deploy; `initialize_database()` runs `CREATE TABLE IF NOT EXISTS` + `ensure_curation_schema()` on every boot |
+| **Documentation** | GitHub Pages     | `https://github.com/pumelela1/Adamas2Aurum-Documentation`              | `main` (docs repo)         | Docusaurus `npm run deploy`                                                                                     |
 
-Source of truth is **Gitea** `sdp.ms.wits.ac.za/404-found-us/Adamas2Aurum` (SSO). Render cannot reach Gitea directly, so a `--mirror` to GitHub is maintained (see `implementation/backend.md` mirroring steps).
+Source of truth is **Gitea** `sdp.ms.wits.ac.za/404-found-us/Adamas2Aurum` (SSO). Render cannot reach Gitea directly, so a mirror to GitHub is maintained.
 
 ## Diagram
 

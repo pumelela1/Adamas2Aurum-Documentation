@@ -18,20 +18,23 @@ $ cp app/src/backend/.env.example app/src/backend/.env
 
 ## Environment variable reference
 
-| Variable         | Type                 | Default                    | Set in                     |
-|------------------|----------------------|----------------------------|----------------------------|
-| `DB_HOST`        | string               | `localhost`                | `utils/db.js`              |
-| `DB_PORT`        | number               | `8024`                     | `utils/db.js`              |
-| `DB_USER`        | string               | `root`                     | `utils/db.js`              |
-| `DB_PASSWORD`    | string               | `test`                     | `utils/db.js`              |
-| `DB_NAME`        | string               | `testdb`                   | `utils/db.js`, `server.js` |
-| `DB_SSL`         | `true` / `false`     | `false`                    | `utils/db.js`              |
-| `SEED_DB`        | `true` / `false`     | `false`                    | `server.js`                |
-| `CLEAR_DB`       | `true` / `false`     | `false`                    | `server.js`                |
-| `LOG_DB`         | `true` / `false`     | `true`                     | `server.js`, `utils/db.js` |
-| `VERBOSE_LOG_DB` | `true` / `false`     | `false`                    | `utils/db.js`              |
-| `PORT`           | number               | `3000`                     | `server.js`                |
-| `SESSION_SECRET` | string               | `a2a-dev-secret`           | `server.js`                |
+| Variable               | Type             | Default                  | Set in                                       |
+|------------------------|------------------|--------------------------|----------------------------------------------|
+| `DB_HOST`              | string           | `localhost`              | `utils/db.js`                                |
+| `DB_PORT`              | number           | `8024`                   | `utils/db.js`                                |
+| `DB_USER`              | string           | `root`                   | `utils/db.js`                                |
+| `DB_PASSWORD`          | string           | `test`                   | `utils/db.js`                                |
+| `DB_NAME`              | string           | `testdb`                 | `utils/db.js`, `server.js`                   |
+| `DB_SSL`               | `true` / `false` | `false`                  | `utils/db.js`                                |
+| `SEED_DB`              | `true` / `false` | `false`                  | `server.js`                                  |
+| `LOG_DB`               | `true` / `false` | `true`                   | `server.js`, `utils/db.js`                   |
+| `VERBOSE_LOG_DB`       | `true` / `false` | `false`                  | `utils/db.js`                                |
+| `PORT`                 | number           | `3000`                   | `server.js`                                  |
+| `BASE_URL`             | string           | `<backend_url>`          | `./utils/google_oauth.js`                    |
+| `GOOGLE_CLIENT_ID`     | string           | `<google_client_id>`     | `./utils/google_oauth.js`, `routes/oauth.js` |
+| `GOOGLE_CLIENT_SECRET` | string           | `<google_client_secret>` | `./utils/google_oauth.js`, `routes/oauth.js` |
+| `SESSION_SECRET`       | string           | `a2a-dev-secret`         | `server.js`                                  |
+| `FRONTEND_URL`         | string           | `<frontend_url>`         | `server.js`                                  |
 
 All boolean-style variables are compared against the literal string
 `'true'` - anything else (including unset, `"1"`, or `"True"`) is treated
@@ -73,17 +76,6 @@ cookie: {
 }
 ```
 
-### Better Auth
-
-`server.js` also wires in [Better Auth](https://www.better-auth.com/) via
-`./src/auth.js` for email/password sign-up and sign-in, alongside the
-legacy PIN-based auth routes (kept for backward compatibility - see the
-`PIN_AUTH_PATHS` gate in `server.js`). Better Auth's own configuration
-(secrets, providers, its database connection, etc.) lives in
-`src/auth.js`, which isn't covered by this doc.
-
----
-
 ## CORS
 
 Allowed origins are a hardcoded array in `server.js`:
@@ -91,25 +83,22 @@ Allowed origins are a hardcoded array in `server.js`:
 ```js
 const allowed_origins = [
   'http://localhost:8055',
-  'http://localhost:5173',
-  'http://127.0.0.1:5173',
   'http://localhost:3000',
   'http://127.0.0.1:3000',
 ]
 ```
 
-`3000` and `8055` correspond to the backend and the standalone frontend
-static server, respectively. `5173` is Vite's default
-dev-server port, but the current root `package.json` no longer has a Vite
-dependency or script. It's harmless to leave.
+plus an additional origin specified by `FRONTEND_URL`.
 
+`3000` and `8055` correspond to the backend and the standalone frontend
+static server, respectively.
 Any request from an origin not in this list is rejected by the CORS
 middleware with `Not allowed by CORS`. Extending this list currently means
 editing `server.js` directly and redeploying.
 
 ---
 
-## Startup database behavior (`SEED_DB`, `CLEAR_DB`, `LOG_DB`)
+## Startup database behavior (`SEED_DB`, `LOG_DB`)
 
 These three flags control **destructive** behavior that runs automatically on
 every backend start.
@@ -119,7 +108,6 @@ On every `server.js` startup:
 ```js
 await initialize_database()   // always runs - CREATE TABLE IF NOT EXISTS, safe
 
-if (process.env.CLEAR_DB === 'true') { await clear_database() }  // destructive
 if (process.env.SEED_DB === 'true')  { await seed_database() }   // destructive
 if (process.env.LOG_DB === 'true') { await view_database() }     // logs
 ```
@@ -128,14 +116,14 @@ A few notes:
 
 > **Note**: `npm run dev:backend` uses `node --watch`. Every time a backend
 > file is saved, the process restarts, and the whole block above runs
-> again. If `SEED_DB=true` or `CLEAR_DB=true` is left in your `.env` while
+> again. If `SEED_DB=true` is left in your `.env` while
 > running in dev/watch mode, **every file save will re-truncate and
 > reseed (or wipe) the database.** These flags are meant for a one-off
 > run, not to be left on.
 
 These env-driven settings are separate from the npm scripts
 (`npm run db:seed` → `seed.js`, `npm run db:reset` → `reset_db.js`). The npm
-scripts are one-off, manually triggered commands, and `SEED_DB`/`CLEAR_DB` are
+scripts are one-off, manually triggered commands, and `SEED_DB` are
 automatic, on-every-startup triggers.
 
 ### `LOG_DB` + `VERBOSE_LOG_DB`
@@ -191,5 +179,5 @@ These can be set using Gitea repository's secrets settings.
 - Configure `.env` to your hosted and running database.
 - Set a long, random `SESSION_SECRET` - don't ship the `a2a-dev-secret` default.
 - Narrow `allowed_origins` in `server.js` to your real domain(s).
-- Double-check `SEED_DB` and `CLEAR_DB` are unset (or `false`) anywhere data matters.
+- Double-check `SEED_DB` is unset (or `false`) anywhere data matters.
 - Make sure your secrets have been set and are valid.

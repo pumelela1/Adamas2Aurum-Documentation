@@ -194,19 +194,10 @@ No manual action except not pushing broken code to `main`.
 
 ### Backend (Render via GitHub Mirror)
 
-Gitea `sdp.ms.wits.ac.za` is not reachable by Render, so a `--mirror` to GitHub is kept (see `implementation/backend.md`):
+Gitea `sdp.ms.wits.ac.za` is not reachable by Render, so a mirror to GitHub is kept.
 
-```bash
-git clone --mirror https://sdp.ms.wits.ac.za/404-found-us/Adamas2Aurum.git
-cd Adamas2Aurum.git
-git remote add github https://github.com/Busisiwe-Mnguni/Adamas2Aurum-backend-deployment.git
-git push --mirror github
-# on new commits: git fetch -p origin && git push --mirror github
-```
-
-Render Web Service (`dev` branch, root `app/src/backend`, `Node`, `npm install && npm run build`, `npm start`, Free) watches the GitHub mirror. Env vars set in Render dashboard: `DB_HOST/PORT/USER/PASSWORD/NAME/SSL`, `BETTER_AUTH_SECRET/URL`, `GOOGLE_CLIENT_ID/SECRET`, `SESSION_SECRET`, `SEED_DB=false`. See `configuration.md`.
-
-Split-origin CORS/cookies: `allowed_origins` extended, cookies `secure:true, sameSite:'none'`, frontend `API_BASE` points to Render URL, OAuth redirects registered for both domains.
+Render Web Service watches the GitHub mirror and deploys the main branch.
+Env vars set in Render dashboard: `DB_HOST/PORT/USER/PASSWORD/NAME/SSL`, `BETTER_AUTH_SECRET/URL`, `GOOGLE_CLIENT_ID/SECRET`, `SESSION_SECRET`, `SEED_DB=false`, and etc.
 
 ### Database (Aiven)
 
